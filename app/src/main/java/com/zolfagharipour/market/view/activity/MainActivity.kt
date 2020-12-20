@@ -1,7 +1,8 @@
-package com.zolfagharipour.market
+package com.zolfagharipour.market.view.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import com.zolfagharipour.market.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
