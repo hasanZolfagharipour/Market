@@ -10,11 +10,9 @@ import com.zolfagharipour.market.network.CheckNetworkConnectivity
 class SplashViewModel(application: Application) : AndroidViewModel(application) {
 
 
-    var isConnect: MutableLiveData<Boolean> = MutableLiveData(false)
-
+    private var isConnect: MutableLiveData<Boolean> = MutableLiveData(true)
     private var networkConnectivity = CheckNetworkConnectivity(application)
     private lateinit var lifecycleOwner: LifecycleOwner
-
 
     fun checkNetwork(lifecycleOwner: LifecycleOwner) {
 
@@ -24,7 +22,6 @@ class SplashViewModel(application: Application) : AndroidViewModel(application) 
             Observer { isConnected -> isConnect.value = isConnected }
         )
     }
-
 
     fun connectedToInternet(): MutableLiveData<Boolean> = isConnect
 

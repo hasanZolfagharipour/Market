@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
+import android.view.animation.AnimationUtils
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -28,7 +28,11 @@ class SplashFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         viewModel = ViewModelProvider(this).get(SplashViewModel::class.java)
-        viewModel.checkNetwork(this)
+        CoroutineScope(Main).launch {
+            delay(500)
+            viewModel.checkNetwork(this@SplashFragment)
+        }
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -37,34 +41,38 @@ class SplashFragment : Fragment() {
         return splashBinding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         splashBinding.splashViewModel = viewModel
         splashBinding.lifecycleOwner = this
-
-        setFullScreenSplash()
-
-        viewModel.isConnect.observe(viewLifecycleOwner, {isConnect -> navigateToHomeFragment(isConnect)})
-
-    }
-
-    private fun setFullScreenSplash(){
-        requireActivity().window.setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
-        )
+        setAnimation()
+        CoroutineScope(Main).launch {
+            delay(1500)
+                viewModel.connectedToInternet().observe(viewLifecycleOwner, { isConnect ->
+                    navigateToHomeFragment(isConnect)
+                })
+            }
     }
 
     private fun navigateToHomeFragment(isConnect: Boolean?){
-        if (isConnect!!){
-            CoroutineScope(Main).launch {
-                delay(2000)
-                val action = SplashFragmentDirections.actionSplashFragmentToHomeFragment()
-                findNavController().navigate(action)
+                if (isConnect!!){
+                    CoroutineScope(Main).launch {
+                        delay(1000)
+                        val action = SplashFragmentDirections.actionSplashFragmentToHomeFragment()
+                        findNavController().navigate(action)
+                    }
             }
+    }
+
+    private fun setAnimation(){
+        CoroutineScope(Main).launch {
+            delay(500)
+            val animation = AnimationUtils.loadAnimation(activity, android.R.anim.fade_in)
+            animation.duration = 1000
+            splashBinding.txtSplashLogo.startAnimation(animation)
+            splashBinding.txtSplashLogo.text = getString(R.string.app_name)
         }
+
     }
 
 }
