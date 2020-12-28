@@ -17,7 +17,6 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-private const val TAG = "tag"
 
 class SplashFragment : Fragment() {
 
@@ -28,14 +27,15 @@ class SplashFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         viewModel = ViewModelProvider(this).get(SplashViewModel::class.java)
-        CoroutineScope(Main).launch {
-            delay(500)
-            viewModel.checkNetwork(this@SplashFragment)
-        }
+        CoroutineScope(Main).launch { viewModel.checkNetwork(this@SplashFragment) }
 
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         splashBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_splash, container, false)
         return splashBinding.root
@@ -46,25 +46,25 @@ class SplashFragment : Fragment() {
         splashBinding.splashViewModel = viewModel
         splashBinding.lifecycleOwner = this
         setAnimation()
-        CoroutineScope(Main).launch {
-            delay(1500)
-                viewModel.connectedToInternet().observe(viewLifecycleOwner, { isConnect ->
-                    navigateToHomeFragment(isConnect)
-                })
-            }
+
+
+        viewModel.isDataFetched.observe(viewLifecycleOwner, { isDataFetched ->
+            navigateToHomeFragment(isDataFetched)
+        })
+
+
     }
 
-    private fun navigateToHomeFragment(isConnect: Boolean?){
-                if (isConnect!!){
-                    CoroutineScope(Main).launch {
-                        delay(1000)
-                        val action = SplashFragmentDirections.actionSplashFragmentToHomeFragment()
-                        findNavController().navigate(action)
-                    }
+    private fun navigateToHomeFragment(isConnect: Boolean?) {
+        if (isConnect!!) {
+            CoroutineScope(Main).launch {
+                val action = SplashFragmentDirections.actionSplashFragmentToHomeFragment()
+                findNavController().navigate(action)
             }
+        }
     }
 
-    private fun setAnimation(){
+    private fun setAnimation() {
         CoroutineScope(Main).launch {
             delay(500)
             val animation = AnimationUtils.loadAnimation(activity, android.R.anim.fade_in)

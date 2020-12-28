@@ -8,4 +8,7 @@
     <string name="sale_basket">سبد خرید</string>
     <string name="my_market">بازار من</string>
     <string name="on_back_message">برای خروج دوباره بازگشت را بزنید</string>
+    <string name="sample_title">گوشی موبایل سامسونگ مدل Galaxy A51 SM-A5</string>
+    <string name="sample_price">489000 هزار تومان</string>
+    <string name="last_product">جدیدترین\nمحصولات</string>
 </resources>
