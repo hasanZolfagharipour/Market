@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -15,7 +16,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:text="@string/last_product"
-            android:textSize="@dimen/_20font_mdp"
+            android:textSize="@dimen/_24font_mdp"
             android:fontFamily="@font/font_yekan"
             android:textColor="@color/white"
             android:lineSpacingExtra="@dimen/_16font_mdp"
@@ -25,10 +26,11 @@
             android:id="@+id/imageViewLabelPhoto"
             android:layout_width="@dimen/_80mdp"
             android:layout_height="@dimen/_80mdp"
-            android:src="@drawable/ic_app_launcher"
             app:layout_constraintTop_toBottomOf="@id/txtViewLabelTitle"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="ContentDescription" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

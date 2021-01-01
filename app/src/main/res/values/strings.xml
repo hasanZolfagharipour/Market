@@ -11,4 +11,8 @@
     <string name="sample_title">گوشی موبایل سامسونگ مدل Galaxy A51 SM-A5</string>
     <string name="sample_price">489000 هزار تومان</string>
     <string name="last_product">جدیدترین\nمحصولات</string>
+    <string name="search_in_market">جستجو در </string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search_in_all_categories">جستجو در همه کالاها</string>
 </resources>

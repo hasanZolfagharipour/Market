@@ -15,7 +15,6 @@ object Utilities {
     }
 
     fun separator(price: String): String {
-        Log.d("tag", "separator: ........................${price}")
         return DecimalFormat("0,000").format(price.toInt())
     }
 }

@@ -11,7 +11,7 @@ import com.zolfagharipour.market.databinding.ItemRowLabelBinding
 import com.zolfagharipour.market.databinding.ItemRowLastProductsBinding
 import com.zolfagharipour.market.viewModel.HomeViewModel
 
-class LastProductsAdapter(var homeViewModel: HomeViewModel, var lifecycleOwner: LifecycleOwner) :
+class LastProductsAdapter(val homeViewModel: HomeViewModel, val lifecycleOwner: LifecycleOwner) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val viewTypeLabel: Int = 0

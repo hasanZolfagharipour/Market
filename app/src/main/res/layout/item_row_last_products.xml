@@ -16,7 +16,7 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="@dimen/_150mdp"
-        android:layout_height="@dimen/_200mdp"
+        android:layout_height="@dimen/_250mdp"
         android:layout_margin="@dimen/_8mdp"
         app:cardCornerRadius="@dimen/_16mdp">
 
@@ -41,6 +41,7 @@
                 android:layout_height="wrap_content"
                 android:text="@{viewModel.productList.get(position).name}"
                 app:layout_constraintTop_toBottomOf="@id/imageViewPhotoProduct"
+                android:layout_marginTop="@dimen/_16mdp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:textColor="@color/black"
@@ -53,23 +54,38 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{viewModel.currentPrice(position)}"
-                app:layout_constraintTop_toBottomOf="@id/txtViewTitleProduct"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/txtViewRegularPriceProduct"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14font_mdp"
                 android:gravity="center"
                 android:fontFamily="@font/font_yekan"/>
 
             <TextView
+                android:id="@+id/txtViewDiscountPriceProduct"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/txtViewPriceProduct"
+                app:layout_constraintBottom_toBottomOf="@id/txtViewPriceProduct"
+                android:textColor="@color/white"
+                android:text="@{viewModel.discountPercent(position)}"
+                android:background="@drawable/discount_background"
+                android:textSize="@dimen/_14font_mdp"
+                android:gravity="center"
+                android:fontFamily="@font/font_yekan"/>
+
+
+            <TextView
                 android:id="@+id/txtViewRegularPriceProduct"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{viewModel.regularPrice(position)}"
-                app:layout_constraintTop_toBottomOf="@id/txtViewPriceProduct"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:textSize="@dimen/_14font_mdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:textSize="@dimen/_10font_mdp"
                 android:gravity="center"
                 android:fontFamily="@font/font_yekan"/>
 
