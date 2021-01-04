@@ -14,26 +14,26 @@ import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import com.zolfagharipour.market.R
+import com.zolfagharipour.market.adapter.CategoryAdapter
 import com.zolfagharipour.market.adapter.HomeSlideAdapter
-import com.zolfagharipour.market.adapter.LastProductsAdapter
-import com.zolfagharipour.market.data.room.entities.ProductRepository
+import com.zolfagharipour.market.adapter.ProductsAdapter
 import com.zolfagharipour.market.databinding.FragmentHomeBinding
 import com.zolfagharipour.market.viewModel.HomeViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.Default
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
 
 
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var homeViewModel: HomeViewModel
+    private lateinit var viewModel: HomeViewModel
     private var autoSliderJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+
+
     }
 
     override fun onCreateView(
@@ -48,30 +48,58 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getData()
         setSlider()
+        setCategorySuggestionRecyclerView()
+        setRecyclerView()
+        setRecyclerView2()
+        setRecyclerView3()
         setListener()
     }
 
+    private fun setCategorySuggestionRecyclerView() {
+        binding.recyclerViewCategorySuggestion.apply {
+            layoutManager = LinearLayoutManager(
+                requireActivity(),
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
+            adapter =
+                CategoryAdapter(viewModel, this@HomeFragment, viewModel.categorySuggestion.value!!)
+        }
+    }
+
     private fun setRecyclerView() {
-        val lastProductsAdapter = LastProductsAdapter(homeViewModel, this)
         binding.recyclerViewLastProducts.apply {
             layoutManager = LinearLayoutManager(
                 requireActivity(),
                 LinearLayoutManager.HORIZONTAL,
                 false
             )
-            adapter = lastProductsAdapter
+            adapter = ProductsAdapter(viewModel, this@HomeFragment, viewModel.lastProducts.value!!)
         }
     }
 
-    private fun getData() {
+    private fun setRecyclerView2() {
+        binding.recyclerViewPopularProducts.apply {
+            layoutManager = LinearLayoutManager(
+                requireActivity(),
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
+            adapter =
+                ProductsAdapter(viewModel, this@HomeFragment, viewModel.popularProducts.value!!)
+        }
+    }
 
-        CoroutineScope(IO).launch {
-            withContext(Main) {
-                homeViewModel.productList.value = ProductRepository.lastProductList
-                setRecyclerView()
-            }
+    private fun setRecyclerView3() {
+        binding.recyclerViewMostRatingProducts.apply {
+            layoutManager = LinearLayoutManager(
+                requireActivity(),
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
+            adapter =
+                ProductsAdapter(viewModel, this@HomeFragment, viewModel.mostRatingProduct.value!!)
         }
     }
 
@@ -82,7 +110,7 @@ class HomeFragment : Fragment() {
 
 
             binding.viewPagerSlider.apply {
-                adapter = HomeSlideAdapter(homeViewModel, viewLifecycleOwner)
+                adapter = HomeSlideAdapter(viewModel, viewLifecycleOwner)
                 clipToPadding = false
                 clipChildren = false
                 offscreenPageLimit = 3
@@ -102,7 +130,7 @@ class HomeFragment : Fragment() {
                 autoSliderJob?.cancel()
                 autoSliderJob = CoroutineScope(Default).launch {
                     delay(3000)
-                    binding.viewPagerSlider.currentItem = homeViewModel.getSliderNextPosition(position)
+                    binding.viewPagerSlider.currentItem = viewModel.getSliderNextPosition(position)
                 }
 
             }
@@ -130,6 +158,11 @@ class HomeFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+        binding.viewPagerSlider.currentItem = 0
+    }
+
+    override fun onResume() {
+        super.onResume()
         binding.viewPagerSlider.currentItem = 0
     }
 

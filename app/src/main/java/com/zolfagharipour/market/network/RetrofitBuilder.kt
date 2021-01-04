@@ -12,11 +12,11 @@ object RetrofitBuilder {
     fun getInstance(type: Type?, typeAdapter: Any?): Retrofit {
         return Retrofit.Builder()
             .baseUrl(NetworkParams.BASE_URL)
-            .addConverterFactory(createGSonConverter(type, typeAdapter))
+            .addConverterFactory(createGsonConverter(type, typeAdapter))
             .build()
     }
 
-    fun createGSonConverter(type: Type?, typeAdapter: Any?): Converter.Factory {
+    fun createGsonConverter(type: Type?, typeAdapter: Any?): Converter.Factory {
         val builder = GsonBuilder().registerTypeAdapter(type, typeAdapter)
         val gSon = builder.create()
         return GsonConverterFactory.create(gSon)

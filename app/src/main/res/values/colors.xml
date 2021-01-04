@@ -12,5 +12,8 @@
     <color name="splashGradientEndColor">#A9BACC</color>
     <color name="defaultPurple">#673AB7</color>
     <color name="colorGrayLight">#F3EFEF</color>
+    <color name="colorRedDigikala">#EF394F</color>
+
+
 
 </resources>

@@ -62,7 +62,6 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 
-
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/viewPagerSlider"
                 android:layout_width="match_parent"
@@ -71,7 +70,6 @@
                 android:paddingStart="@dimen/_24mdp"
                 android:paddingEnd="@dimen/_24mdp"
                 app:layout_constraintTop_toBottomOf="@id/cardViewContainerSearchViewHome" />
-
 
             <com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator
                 android:id="@+id/dotCircleIndicator"
@@ -86,20 +84,93 @@
                 app:layout_constraintStart_toStartOf="@id/viewPagerSlider"
                 app:selectedDotColor="@color/colorPrimary" />
 
-
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewLastProducts"
+                android:id="@+id/recyclerViewCategorySuggestion"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_16mdp"
-                android:background="@drawable/recyclerview_background_gradient"
+                android:layout_marginStart="@dimen/_8mdp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/viewPagerSlider" />
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/textViewLastProductsLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/recyclerViewCategorySuggestion"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="@dimen/_8mdp"
+                android:fontFamily="@font/font_yekan"
+                android:textColor="@color/black"
+                android:text="@string/last_product_label"
+                android:layout_marginTop="@dimen/_20mdp"
+                android:textStyle="bold"
+                android:textSize="16sp"/>
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewLastProducts"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8mdp"
+                android:background="@color/colorRedDigikala"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textViewLastProductsLabel"/>
+
+
+            <TextView
+                android:id="@+id/textViewPopularProductsLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/recyclerViewLastProducts"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="@dimen/_8mdp"
+                android:fontFamily="@font/font_yekan"
+                android:textColor="@color/black"
+                android:text="@string/popular_product_label"
+                android:layout_marginTop="@dimen/_20mdp"
+                android:textStyle="bold"
+                android:textSize="16sp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewPopularProducts"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8mdp"
+                android:background="@color/colorRedDigikala"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textViewPopularProductsLabel" />
+
+
+            <TextView
+                android:id="@+id/textViewMostRatingProductsLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/recyclerViewPopularProducts"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="@dimen/_8mdp"
+                android:fontFamily="@font/font_yekan"
+                android:textColor="@color/black"
+                android:text="@string/most_rating_product_label"
+                android:layout_marginTop="@dimen/_20mdp"
+                android:textStyle="bold"
+                android:textSize="16sp"/>
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewMostRatingProducts"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8mdp"
+                android:background="@color/colorRedDigikala"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textViewMostRatingProductsLabel" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
 

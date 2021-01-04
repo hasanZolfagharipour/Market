@@ -6,12 +6,8 @@
 
     <data>
         <variable
-            name="viewModel"
-            type="com.zolfagharipour.market.viewModel.HomeViewModel" />
-
-        <variable
-            name="position"
-            type="Integer" />
+            name="product"
+            type="com.zolfagharipour.market.data.room.entities.Product" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -23,7 +19,6 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/item_product_background_gradient"
             android:padding="@dimen/_8mdp">
 
             <ImageView
@@ -39,7 +34,7 @@
                 android:id="@+id/txtViewTitleProduct"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{viewModel.productList.get(position).name}"
+                android:text="@{product.name}"
                 app:layout_constraintTop_toBottomOf="@id/imageViewPhotoProduct"
                 android:layout_marginTop="@dimen/_16mdp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -53,7 +48,7 @@
                 android:id="@+id/txtViewPriceProduct"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{viewModel.currentPrice(position)}"
+                android:text="@{product.currentPriceFormatted}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/txtViewRegularPriceProduct"
@@ -70,7 +65,7 @@
                 app:layout_constraintTop_toTopOf="@id/txtViewPriceProduct"
                 app:layout_constraintBottom_toBottomOf="@id/txtViewPriceProduct"
                 android:textColor="@color/white"
-                android:text="@{viewModel.discountPercent(position)}"
+                android:text="@{product.discountPercentFormatted()}"
                 android:background="@drawable/discount_background"
                 android:textSize="@dimen/_14font_mdp"
                 android:gravity="center"
@@ -81,7 +76,7 @@
                 android:id="@+id/txtViewRegularPriceProduct"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{viewModel.regularPrice(position)}"
+                android:text="@{product.regularPriceFormatted()}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"

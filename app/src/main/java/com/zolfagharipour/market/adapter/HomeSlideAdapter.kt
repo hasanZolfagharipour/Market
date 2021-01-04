@@ -22,7 +22,7 @@ class HomeSlideAdapter(val viewModel: HomeViewModel, val lifecycleOwner: Lifecyc
         }
 
         fun bindingImages(position: Int) {
-            binding.imageViewPhotoSlider.load(viewModel.sliderBanner.value!!.imageList[position]) {
+            binding.imageViewPhotoSlider.load(viewModel.slider.value!!.imageList[position]) {
                 transformations(RoundedCornersTransformation(24f))
             }
             binding.executePendingBindings()
@@ -44,5 +44,5 @@ class HomeSlideAdapter(val viewModel: HomeViewModel, val lifecycleOwner: Lifecyc
         holder.bindingImages(position)
     }
 
-    override fun getItemCount(): Int = viewModel.sliderBanner.value!!.imageList.size
+    override fun getItemCount(): Int = viewModel.slider.value!!.imageList.size
 }

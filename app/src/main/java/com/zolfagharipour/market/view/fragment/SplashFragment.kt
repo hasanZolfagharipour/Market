@@ -1,5 +1,6 @@
 package com.zolfagharipour.market.view.fragment
 
+import android.animation.Animator
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,7 +21,7 @@ import kotlinx.coroutines.launch
 
 class SplashFragment : Fragment() {
 
-    private lateinit var splashBinding: FragmentSplashBinding
+    private lateinit var binding: FragmentSplashBinding
     private lateinit var viewModel: SplashViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,7 +29,6 @@ class SplashFragment : Fragment() {
 
         viewModel = ViewModelProvider(this).get(SplashViewModel::class.java)
         CoroutineScope(Main).launch { viewModel.checkNetwork(this@SplashFragment) }
-
     }
 
     override fun onCreateView(
@@ -36,23 +36,21 @@ class SplashFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        splashBinding =
+        binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_splash, container, false)
-        return splashBinding.root
+        logoAnimation()
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        splashBinding.splashViewModel = viewModel
-        splashBinding.lifecycleOwner = this
+        binding.splashViewModel = viewModel
+        binding.lifecycleOwner = this
         setAnimation()
-
 
         viewModel.isDataFetched.observe(viewLifecycleOwner, { isDataFetched ->
             navigateToHomeFragment(isDataFetched)
         })
-
-
     }
 
     private fun navigateToHomeFragment(isConnect: Boolean?) {
@@ -69,10 +67,36 @@ class SplashFragment : Fragment() {
             delay(500)
             val animation = AnimationUtils.loadAnimation(activity, android.R.anim.fade_in)
             animation.duration = 1000
-            splashBinding.txtSplashLogo.startAnimation(animation)
-            splashBinding.txtSplashLogo.text = getString(R.string.app_name)
+            binding.txtSplashLogo.startAnimation(animation)
+            binding.txtSplashLogo.text = getString(R.string.app_name)
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                binding.txtSplashLogo.setTypeface(resources.getFont(R.font.orbitron_bold))
+            }
         }
 
+    }
+
+    private fun logoAnimation() {
+
+        binding.lottieAnimationLogo.addAnimatorListener(object: Animator.AnimatorListener{
+            override fun onAnimationStart(animation: Animator?) {
+
+            }
+
+            override fun onAnimationEnd(animation: Animator?) {
+
+            }
+
+            override fun onAnimationCancel(animation: Animator?) {
+
+            }
+
+            override fun onAnimationRepeat(animation: Animator?) {
+                binding.lottieAnimationLogo.setMinAndMaxProgress(0.3f, 1f)
+            }
+
+
+        })
     }
 
 }
