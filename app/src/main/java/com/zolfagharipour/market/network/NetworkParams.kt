@@ -35,6 +35,21 @@ object NetworkParams {
         }
     }
 
+    val QUERY_OPTIONS_CATEGORY: HashMap<String, String> = object : HashMap<String, String>(QUERY_OPTIONS_BASIC) {
+        init {
+            put(PER_PAGE, NUMBER_OF_PER_PAGE)
+        }
+    }
+
+    fun QUERY_OPTIONS_PRODUCT_OF_CATEGORY(categoryId: String): HashMap<String, String> =
+            object : HashMap<String, String>(QUERY_OPTIONS_BASIC) {
+                init {
+                    put("category", categoryId)
+                }
+    }
+
+
+
 
 
 }

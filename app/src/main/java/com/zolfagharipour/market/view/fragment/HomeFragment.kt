@@ -14,13 +14,16 @@ import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import com.zolfagharipour.market.R
-import com.zolfagharipour.market.adapter.CategoryAdapter
+import com.zolfagharipour.market.adapter.CategorySuggestionAdapter
 import com.zolfagharipour.market.adapter.HomeSlideAdapter
 import com.zolfagharipour.market.adapter.ProductsAdapter
+import com.zolfagharipour.market.data.room.entities.Product
 import com.zolfagharipour.market.databinding.FragmentHomeBinding
 import com.zolfagharipour.market.viewModel.HomeViewModel
+import com.zolfagharipour.market.viewModel.MarketNetworkViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.Default
+import kotlinx.coroutines.Dispatchers.IO
 
 
 class HomeFragment : Fragment() {
@@ -32,8 +35,7 @@ class HomeFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-
-
+        fetchCategoryItems()
     }
 
     override fun onCreateView(
@@ -42,18 +44,27 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.viewModel = viewModel
+
         setSlider()
         setCategorySuggestionRecyclerView()
-        setRecyclerView()
-        setRecyclerView2()
-        setRecyclerView3()
+        setRecyclerViews(binding.recyclerViewLastProducts, viewModel.lastProducts.value!!)
+        setRecyclerViews(binding.recyclerViewPopularProducts, viewModel.popularProducts.value!!)
+        setRecyclerViews(binding.recyclerViewMostRatingProducts, viewModel.mostRatingProduct.value!!)
         setListener()
+    }
+
+    private fun fetchCategoryItems(){
+        CoroutineScope(IO).launch {
+            delay(500)
+            val marketViewModel = ViewModelProvider(requireActivity()).get(MarketNetworkViewModel::class.java)
+            marketViewModel.fetchProductsOfEachCategory()
+        }
     }
 
     private fun setCategorySuggestionRecyclerView() {
@@ -64,42 +75,18 @@ class HomeFragment : Fragment() {
                 false
             )
             adapter =
-                CategoryAdapter(viewModel, this@HomeFragment, viewModel.categorySuggestion.value!!)
+                CategorySuggestionAdapter(viewModel, this@HomeFragment, viewModel.categoryProductSuggestionList.value!!)
         }
     }
 
-    private fun setRecyclerView() {
-        binding.recyclerViewLastProducts.apply {
+    private fun setRecyclerViews(recyclerView: RecyclerView, list: ArrayList<Product>) {
+        recyclerView.apply {
             layoutManager = LinearLayoutManager(
                 requireActivity(),
                 LinearLayoutManager.HORIZONTAL,
                 false
             )
-            adapter = ProductsAdapter(viewModel, this@HomeFragment, viewModel.lastProducts.value!!)
-        }
-    }
-
-    private fun setRecyclerView2() {
-        binding.recyclerViewPopularProducts.apply {
-            layoutManager = LinearLayoutManager(
-                requireActivity(),
-                LinearLayoutManager.HORIZONTAL,
-                false
-            )
-            adapter =
-                ProductsAdapter(viewModel, this@HomeFragment, viewModel.popularProducts.value!!)
-        }
-    }
-
-    private fun setRecyclerView3() {
-        binding.recyclerViewMostRatingProducts.apply {
-            layoutManager = LinearLayoutManager(
-                requireActivity(),
-                LinearLayoutManager.HORIZONTAL,
-                false
-            )
-            adapter =
-                ProductsAdapter(viewModel, this@HomeFragment, viewModel.mostRatingProduct.value!!)
+            adapter = ProductsAdapter(viewModel, this@HomeFragment, list)
         }
     }
 
@@ -107,7 +94,6 @@ class HomeFragment : Fragment() {
         CoroutineScope(Default).launch {
             val compositePageTransformer = CompositePageTransformer()
             compositePageTransformer.addTransformer(MarginPageTransformer(30))
-
 
             binding.viewPagerSlider.apply {
                 adapter = HomeSlideAdapter(viewModel, viewLifecycleOwner)
@@ -117,7 +103,7 @@ class HomeFragment : Fragment() {
                 getChildAt(0).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
                 setPageTransformer(compositePageTransformer)
             }
-            setDots()
+            binding.dotCircleIndicator.setViewPager2(binding.viewPagerSlider)
         }
     }
 
@@ -142,10 +128,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun setDots() {
-        binding.dotCircleIndicator.setViewPager2(binding.viewPagerSlider)
-    }
-
     override fun onStop() {
         super.onStop()
         autoSliderJob?.cancel()
@@ -165,6 +147,4 @@ class HomeFragment : Fragment() {
         super.onResume()
         binding.viewPagerSlider.currentItem = 0
     }
-
 }
-

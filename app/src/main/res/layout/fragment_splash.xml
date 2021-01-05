@@ -11,7 +11,7 @@
 
         <variable
             name="splashViewModel"
-            type="com.zolfagharipour.market.viewModel.SplashViewModel" />
+            type="com.zolfagharipour.market.viewModel.MarketNetworkViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

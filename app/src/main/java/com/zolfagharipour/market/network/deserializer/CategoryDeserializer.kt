@@ -3,28 +3,28 @@ package com.zolfagharipour.market.network.deserializer
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
-import com.zolfagharipour.market.data.room.entities.ProductCategory
+import com.zolfagharipour.market.data.room.entities.CategoryProduct
 import java.lang.reflect.Type
 
-class CategoryDeserializer: JsonDeserializer<ArrayList<ProductCategory>> {
+class CategoryDeserializer: JsonDeserializer<ArrayList<CategoryProduct>> {
     override fun deserialize(
         json: JsonElement?,
         typeOfT: Type?,
         context: JsonDeserializationContext?
-    ): ArrayList<ProductCategory> {
+    ): ArrayList<CategoryProduct> {
 
         val jsonArray = json!!.asJsonArray
-        val list = ArrayList<ProductCategory>()
+        val list = ArrayList<CategoryProduct>()
 
         for (i in 0 until jsonArray.size()){
             val jsonObject = jsonArray[i].asJsonObject
 
-            val id = jsonObject["id"].asInt
+            val id = jsonObject["id"].asString
             val name = jsonObject["name"].asString
             val imageObject = jsonObject["image"].asJsonObject
             val image = imageObject["src"].asString
 
-            list.add(ProductCategory(id, name, image))
+            list.add(CategoryProduct(id, name, image))
         }
         return list
     }
