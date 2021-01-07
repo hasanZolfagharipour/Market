@@ -7,11 +7,13 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.zolfagharipour.market.R
 import com.zolfagharipour.market.adapter.CategoryAdapter
 import com.zolfagharipour.market.databinding.FragmentCategoryBinding
 import com.zolfagharipour.market.viewModel.CategoryViewModel
+import com.zolfagharipour.market.viewModel.HomeViewModel
 
 class CategoryFragment : Fragment() {
 
@@ -20,7 +22,7 @@ class CategoryFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(CategoryViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity()).get(CategoryViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -37,10 +39,16 @@ class CategoryFragment : Fragment() {
         setCategoryRecyclerView()
     }
 
-    private fun setCategoryRecyclerView(){
+    private fun setCategoryRecyclerView() {
         binding.recyclerViewCategoryFragment.apply {
-            layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
-            adapter = CategoryAdapter(viewModel, this@CategoryFragment, viewModel.categoryProductList.value!!)
+            layoutManager =
+                LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
+            adapter = CategoryAdapter(
+                viewModel,
+                this@CategoryFragment,
+                viewModel.categoryProductList.value!!,
+                findNavController()
+            )
         }
     }
 

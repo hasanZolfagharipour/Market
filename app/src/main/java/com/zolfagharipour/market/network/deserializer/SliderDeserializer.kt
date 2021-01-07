@@ -14,7 +14,7 @@ class SliderDeserializer: JsonDeserializer<SliderModel> {
     ): SliderModel {
         val sliderObject = json!!.asJsonObject
 
-        val id = sliderObject["id"].asInt
+        val id = sliderObject["id"].asString
         val name = sliderObject["name"].asString
         val imageObjects = sliderObject["images"].asJsonArray
         val images = ArrayList<String>()

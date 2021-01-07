@@ -11,6 +11,7 @@
     </data>
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewContainerItemRowProduct"
         android:layout_width="@dimen/_150mdp"
         android:layout_height="@dimen/_250mdp"
         android:layout_margin="@dimen/_8mdp"

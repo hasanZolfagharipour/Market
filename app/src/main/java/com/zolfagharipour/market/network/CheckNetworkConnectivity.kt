@@ -9,8 +9,8 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
+import com.zolfagharipour.market.other.TAG
 
-const val TAG = "tag"
 
 class CheckNetworkConnectivity(private val context: Context) : LiveData<Boolean>() {
 

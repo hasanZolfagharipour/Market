@@ -5,7 +5,7 @@ import android.text.Spanned
 import android.text.style.StrikethroughSpan
 import android.util.Log
 import java.text.DecimalFormat
-
+const val TAG = "tag"
 object Utilities {
 
     fun getSpannedText(input: String): SpannableString{

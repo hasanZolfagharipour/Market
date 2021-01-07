@@ -12,7 +12,7 @@ import com.zolfagharipour.market.data.room.entities.ProductRepository
 import com.zolfagharipour.market.data.room.entities.SliderModel
 import com.zolfagharipour.market.network.*
 import com.zolfagharipour.market.network.deserializer.CategoryDeserializer
-import com.zolfagharipour.market.network.deserializer.ProductDeserializer
+import com.zolfagharipour.market.network.deserializer.ProductsDeserializer
 import com.zolfagharipour.market.network.deserializer.SliderDeserializer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default
@@ -48,7 +48,7 @@ class MarketNetworkViewModel(application: Application) : AndroidViewModel(applic
         val typeTokenSlider = object: TypeToken<SliderModel>() {}.type
         val typeTokenCategorySuggestion = object: TypeToken<ArrayList<CategoryProduct>>(){}.type
 
-        val typeAdapterProduct = ProductDeserializer()
+        val typeAdapterProduct = ProductsDeserializer()
         val typeAdapterSlider = SliderDeserializer()
         val typeAdapterCategorySuggestion = CategoryDeserializer()
 
@@ -59,7 +59,7 @@ class MarketNetworkViewModel(application: Application) : AndroidViewModel(applic
 
         val lastResponse = productApi.products(NetworkParams.QUERY_OPTIONS_BASIC)
         val popularResponse = productApi.products(NetworkParams.QUERY_OPTIONS_POPULAR_PRODUCTS)
-        val sliderResponse = sliderApi.slideItems("608", NetworkParams.QUERY_OPTIONS_BASIC)
+        val sliderResponse = sliderApi.sliderItems("608", NetworkParams.QUERY_OPTIONS_BASIC)
         val mostRatingResponse = productApi.products(NetworkParams.QUERY_OPTIONS_MOST_RATING_PRODUCTS)
         val categorySuggestionsResponse = categoryApi.categories(NetworkParams.QUERY_OPTIONS_BASIC)
         val categoryResponse = categoryApi.categories(NetworkParams.QUERY_OPTIONS_CATEGORY)
@@ -97,7 +97,7 @@ class MarketNetworkViewModel(application: Application) : AndroidViewModel(applic
 
         ProductRepository.categoryProducts = categoryResponse.body()!!
         val typeTokenProduct = object: TypeToken<ArrayList<Product>>() {}.type
-        val typeAdapterProduct = ProductDeserializer()
+        val typeAdapterProduct = ProductsDeserializer()
         val productApi = RetrofitBuilder.getInstance(typeTokenProduct, typeAdapterProduct).create(ApiRequestService::class.java)
 
         for (i in 0 until categoryResponse.body()!!.size) {

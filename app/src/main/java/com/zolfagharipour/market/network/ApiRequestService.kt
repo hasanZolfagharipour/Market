@@ -13,7 +13,10 @@ interface ApiRequestService {
     suspend fun products(@QueryMap options: Map<String, String>): Response<ArrayList<Product>>
 
     @GET("products/{id}")
-    suspend fun slideItems(@Path("id" ) sliderId: String, @QueryMap options: Map<String, String>): Response<SliderModel>
+    suspend fun sliderItems(@Path("id" ) id: String, @QueryMap options: Map<String, String>): Response<SliderModel>
+
+    @GET("products/{id}")
+    suspend fun product(@Path("id" ) id: String, @QueryMap options: Map<String, String>): Response<Product>
 
     @GET("products/categories")
     suspend fun categories(@QueryMap options: Map<String, String>): Response<ArrayList<CategoryProduct>>

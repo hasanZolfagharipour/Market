@@ -24,12 +24,19 @@
         <action
             android:id="@+id/action_homeFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
     </fragment>
     <fragment
         android:id="@+id/categoryFragment"
         android:name="com.zolfagharipour.market.view.fragment.CategoryFragment"
         android:label="Category"
-        tools:layout="@layout/fragment_category" />
+        tools:layout="@layout/fragment_category" >
+        <action
+            android:id="@+id/action_categoryFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/myMarketFragment"
         android:name="com.zolfagharipour.market.view.fragment.MyMarketFragment"
@@ -50,6 +57,18 @@
             app:destination="@id/homeFragment"
             app:popUpTo="@id/searchFragment"
             app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="com.zolfagharipour.market.view.fragment.DetailFragment"
+        android:label="Detail"
+        tools:layout="@layout/fragment_detail" >
+        <argument
+            android:name="product"
+            app:argType="com.zolfagharipour.market.data.room.entities.Product" />
+        <action
+            android:id="@+id/action_detailFragment_self"
+            app:destination="@id/detailFragment" />
     </fragment>
 
 

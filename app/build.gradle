@@ -92,6 +92,9 @@ dependencies {
     //CircleIndicator
     implementation 'com.tbuonomo.andrui:viewpagerdotsindicator:4.1.2'
 
+    //RatingBar
+    implementation 'me.zhanghai.android.materialratingbar:library:1.4.0'
+
 
 
     testImplementation 'junit:junit:4.13.1'

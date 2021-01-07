@@ -1,6 +1,7 @@
 package com.zolfagharipour.market.view.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,12 +19,16 @@ import com.zolfagharipour.market.adapter.CategorySuggestionAdapter
 import com.zolfagharipour.market.adapter.HomeSlideAdapter
 import com.zolfagharipour.market.adapter.ProductsAdapter
 import com.zolfagharipour.market.data.room.entities.Product
+import com.zolfagharipour.market.data.room.entities.ProductRepository
 import com.zolfagharipour.market.databinding.FragmentHomeBinding
+import com.zolfagharipour.market.enums.FragmentHostEnum
+import com.zolfagharipour.market.other.TAG
 import com.zolfagharipour.market.viewModel.HomeViewModel
 import com.zolfagharipour.market.viewModel.MarketNetworkViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 
 
 class HomeFragment : Fragment() {
@@ -34,7 +39,7 @@ class HomeFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity()).get(HomeViewModel::class.java)
         fetchCategoryItems()
     }
 
@@ -55,15 +60,21 @@ class HomeFragment : Fragment() {
         setCategorySuggestionRecyclerView()
         setRecyclerViews(binding.recyclerViewLastProducts, viewModel.lastProducts.value!!)
         setRecyclerViews(binding.recyclerViewPopularProducts, viewModel.popularProducts.value!!)
-        setRecyclerViews(binding.recyclerViewMostRatingProducts, viewModel.mostRatingProduct.value!!)
+        setRecyclerViews(
+            binding.recyclerViewMostRatingProducts,
+            viewModel.mostRatingProduct.value!!
+        )
         setListener()
     }
 
-    private fun fetchCategoryItems(){
+    private fun fetchCategoryItems() {
         CoroutineScope(IO).launch {
-            delay(500)
-            val marketViewModel = ViewModelProvider(requireActivity()).get(MarketNetworkViewModel::class.java)
-            marketViewModel.fetchProductsOfEachCategory()
+            if (!viewModel.isCategoryFechItemFetched) {
+                val marketViewModel =
+                    ViewModelProvider(requireActivity()).get(MarketNetworkViewModel::class.java)
+                marketViewModel.fetchProductsOfEachCategory()
+                viewModel.isCategoryFechItemFetched = true
+            }
         }
     }
 
@@ -75,7 +86,11 @@ class HomeFragment : Fragment() {
                 false
             )
             adapter =
-                CategorySuggestionAdapter(viewModel, this@HomeFragment, viewModel.categoryProductSuggestionList.value!!)
+                CategorySuggestionAdapter(
+                    viewModel,
+                    this@HomeFragment,
+                    viewModel.categoryProductSuggestionList.value!!
+                )
         }
     }
 
@@ -86,7 +101,13 @@ class HomeFragment : Fragment() {
                 LinearLayoutManager.HORIZONTAL,
                 false
             )
-            adapter = ProductsAdapter(viewModel, this@HomeFragment, list)
+            adapter = ProductsAdapter(
+                viewModel,
+                this@HomeFragment,
+                list,
+                findNavController(),
+                FragmentHostEnum.HOME
+            )
         }
     }
 

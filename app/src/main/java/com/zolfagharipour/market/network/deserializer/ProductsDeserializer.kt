@@ -7,7 +7,7 @@ import com.zolfagharipour.market.data.room.entities.Product
 import java.lang.reflect.Type
 
 
-class ProductDeserializer : JsonDeserializer<ArrayList<Product>> {
+class ProductsDeserializer : JsonDeserializer<ArrayList<Product>> {
     override fun deserialize(
         json: JsonElement?,
         typeOfT: Type?,
@@ -23,17 +23,17 @@ class ProductDeserializer : JsonDeserializer<ArrayList<Product>> {
             val productObject = productArray[i].asJsonObject
             if (!productObject["purchasable"].asBoolean)
                 continue
-            val id = productObject["id"].asInt
+            val id = productObject["id"].asString
             val name = productObject["name"].asString
             val price = productObject["price"].asString
             val regularPrice = productObject["regular_price"].asString
             val imageObjects = productObject["images"].asJsonArray
             val images = ArrayList<String>()
-            for (j in 0 until imageObjects.size()) {
-                val imageObject = imageObjects[j].asJsonObject
-                val imageUrl = imageObject["src"].asString
-                images.add(imageUrl)
-            }
+
+            val imageObject = imageObjects[0].asJsonObject
+            val imageUrl = imageObject["src"].asString
+            images.add(imageUrl)
+
             products.add(Product(id, name, price, regularPrice, images))
         }
         return products

@@ -17,5 +17,9 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="search_in_all_categories">جستجو در همه کالاها</string>
+    <string name="add_to_sale_basket">افزودن به سبد خرید</string>
+    <string name="rate_of_this_product">امتیاز محصول</string>
+    <string name="properties_of_product">مشخصات محصول</string>
+    <string name="similar_product">محصولات مشابه</string>
 
 </resources>

@@ -7,6 +7,5 @@ import com.zolfagharipour.market.data.room.entities.CategoryProduct
 import com.zolfagharipour.market.data.room.entities.ProductRepository
 
 class CategoryViewModel(application: Application) : AndroidViewModel(application) {
-
     var categoryProductList: MutableLiveData<ArrayList<CategoryProduct>> = MutableLiveData(ProductRepository.categoryProducts)
 }

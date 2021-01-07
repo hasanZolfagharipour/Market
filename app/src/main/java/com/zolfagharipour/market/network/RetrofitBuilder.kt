@@ -16,7 +16,7 @@ object RetrofitBuilder {
             .build()
     }
 
-    fun createGsonConverter(type: Type?, typeAdapter: Any?): Converter.Factory {
+    private fun createGsonConverter(type: Type?, typeAdapter: Any?): Converter.Factory {
         val builder = GsonBuilder().registerTypeAdapter(type, typeAdapter)
         val gSon = builder.create()
         return GsonConverterFactory.create(gSon)

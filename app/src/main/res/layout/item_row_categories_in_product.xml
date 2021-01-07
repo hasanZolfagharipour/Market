@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="category"
+            type="com.zolfagharipour.market.data.room.entities.CategoryProduct" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_4mdp"
+        android:layout_marginStart="@dimen/_4mdp"
+        android:layout_marginTop="@dimen/_8mdp"
+        android:layout_marginBottom="@dimen/_8mdp"
+        app:cardCornerRadius="24dp">
+
+        <TextView
+            android:id="@+id/textViewCategoryTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{category.nameFormatted}"
+            android:gravity="center"
+            android:fontFamily="@font/font_yekan"
+            android:textSize="@dimen/_16font_mdp"
+            android:layout_margin="@dimen/_8mdp"
+            android:textColor="@color/black"/>
+
+    </androidx.cardview.widget.CardView>
+
+</layout>
