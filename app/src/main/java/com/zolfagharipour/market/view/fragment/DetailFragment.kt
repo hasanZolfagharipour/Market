@@ -14,7 +14,7 @@ import com.zolfagharipour.market.R
 import com.zolfagharipour.market.adapter.CategoryTagInProductAdapter
 import com.zolfagharipour.market.adapter.PhotoSliderAdapter
 import com.zolfagharipour.market.adapter.ProductsAdapter
-import com.zolfagharipour.market.data.room.entities.Product
+import com.zolfagharipour.market.data.room.entities.ProductModel
 import com.zolfagharipour.market.databinding.FragmentDetailBinding
 import com.zolfagharipour.market.enums.FragmentHostEnum
 import com.zolfagharipour.market.viewModel.DetailViewModel
@@ -47,7 +47,7 @@ class DetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.viewModel = viewModel
         CoroutineScope(Main).launch {
-            viewModel.product.observe(viewLifecycleOwner, {
+            viewModel.productModel.observe(viewLifecycleOwner, {
                 setSlider(it)
                 setCategoryTagRecyclerView(it)
                 setSimilarProductRecyclerView(it)
@@ -55,18 +55,18 @@ class DetailFragment : Fragment() {
         }
     }
 
-    private fun setSlider(product: Product) {
+    private fun setSlider(productModel: ProductModel) {
         binding.viewPagerPhotoSlider.apply {
             adapter = PhotoSliderAdapter(
                 viewModel,
                 viewLifecycleOwner,
-                product.images
+                productModel.images
             )
         }
         binding.dotCircleIndicatorPhoto.setViewPager2(binding.viewPagerPhotoSlider)
     }
 
-    private fun setCategoryTagRecyclerView(product: Product) {
+    private fun setCategoryTagRecyclerView(productModel: ProductModel) {
         binding.recyclerViewCategoriesInProduct.apply {
             layoutManager = LinearLayoutManager(
                 viewModel.getApplication(),
@@ -74,11 +74,11 @@ class DetailFragment : Fragment() {
                 false
             )
             adapter =
-                CategoryTagInProductAdapter(viewModel, this@DetailFragment, product.categories)
+                CategoryTagInProductAdapter(viewModel, this@DetailFragment, productModel.categories)
         }
     }
 
-    private fun setSimilarProductRecyclerView(product: Product) {
+    private fun setSimilarProductRecyclerView(productModel: ProductModel) {
         binding.recyclerViewSimilarProduct.apply {
             layoutManager = LinearLayoutManager(
                 viewModel.getApplication(),
@@ -88,7 +88,7 @@ class DetailFragment : Fragment() {
             adapter = ProductsAdapter(
                 viewModel,
                 this@DetailFragment,
-                product.relatedProduct,
+                productModel.relatedProductModel,
                 findNavController(),
                 FragmentHostEnum.DETAIL
             )

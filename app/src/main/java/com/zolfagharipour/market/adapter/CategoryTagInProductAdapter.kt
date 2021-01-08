@@ -7,10 +7,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.zolfagharipour.market.R
-import com.zolfagharipour.market.data.room.entities.CategoryProduct
+import com.zolfagharipour.market.data.room.entities.CategoryModel
 import com.zolfagharipour.market.databinding.ItemRowCategoriesInProductBinding
 
-class CategoryTagInProductAdapter(val viewModel: AndroidViewModel, val lifecycleOwner: LifecycleOwner,private val list: ArrayList<CategoryProduct>):
+class CategoryTagInProductAdapter(val viewModel: AndroidViewModel, val lifecycleOwner: LifecycleOwner,private val list: ArrayList<CategoryModel>):
     RecyclerView.Adapter<CategoryTagInProductAdapter.CategoryTagInProductViewHolder>() {
 
     inner class CategoryTagInProductViewHolder(val binding: ItemRowCategoriesInProductBinding): RecyclerView.ViewHolder(binding.root){
@@ -18,8 +18,8 @@ class CategoryTagInProductAdapter(val viewModel: AndroidViewModel, val lifecycle
             binding.lifecycleOwner = lifecycleOwner
         }
 
-        fun bindCategories(categoryProduct: CategoryProduct){
-            binding.category = categoryProduct
+        fun bindCategories(categoryModel: CategoryModel){
+            binding.category = categoryModel
         }
     }
 

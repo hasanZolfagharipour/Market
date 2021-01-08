@@ -1,7 +1,6 @@
 package com.zolfagharipour.market.view.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,17 +17,12 @@ import com.zolfagharipour.market.R
 import com.zolfagharipour.market.adapter.CategorySuggestionAdapter
 import com.zolfagharipour.market.adapter.HomeSlideAdapter
 import com.zolfagharipour.market.adapter.ProductsAdapter
-import com.zolfagharipour.market.data.room.entities.Product
-import com.zolfagharipour.market.data.room.entities.ProductRepository
+import com.zolfagharipour.market.data.room.entities.ProductModel
 import com.zolfagharipour.market.databinding.FragmentHomeBinding
 import com.zolfagharipour.market.enums.FragmentHostEnum
-import com.zolfagharipour.market.other.TAG
 import com.zolfagharipour.market.viewModel.HomeViewModel
-import com.zolfagharipour.market.viewModel.MarketNetworkViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.Default
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
 
 
 class HomeFragment : Fragment() {
@@ -40,7 +34,6 @@ class HomeFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(requireActivity()).get(HomeViewModel::class.java)
-        fetchCategoryItems()
     }
 
     override fun onCreateView(
@@ -62,20 +55,9 @@ class HomeFragment : Fragment() {
         setRecyclerViews(binding.recyclerViewPopularProducts, viewModel.popularProducts.value!!)
         setRecyclerViews(
             binding.recyclerViewMostRatingProducts,
-            viewModel.mostRatingProduct.value!!
+            viewModel.mostRatingProductModel.value!!
         )
         setListener()
-    }
-
-    private fun fetchCategoryItems() {
-        CoroutineScope(IO).launch {
-            if (!viewModel.isCategoryFechItemFetched) {
-                val marketViewModel =
-                    ViewModelProvider(requireActivity()).get(MarketNetworkViewModel::class.java)
-                marketViewModel.fetchProductsOfEachCategory()
-                viewModel.isCategoryFechItemFetched = true
-            }
-        }
     }
 
     private fun setCategorySuggestionRecyclerView() {
@@ -89,12 +71,12 @@ class HomeFragment : Fragment() {
                 CategorySuggestionAdapter(
                     viewModel,
                     this@HomeFragment,
-                    viewModel.categoryProductSuggestionList.value!!
+                    viewModel.categoryModelSuggestionList.value!!
                 )
         }
     }
 
-    private fun setRecyclerViews(recyclerView: RecyclerView, list: ArrayList<Product>) {
+    private fun setRecyclerViews(recyclerView: RecyclerView, list: ArrayList<ProductModel>) {
         recyclerView.apply {
             layoutManager = LinearLayoutManager(
                 requireActivity(),
@@ -143,7 +125,7 @@ class HomeFragment : Fragment() {
             }
         })
 
-        binding.cardViewContainerSearchViewHome.setOnClickListener {
+        binding.searchViewBox.cardViewContainerSearchViewHome.setOnClickListener {
             val action = HomeFragmentDirections.actionHomeFragmentToSearchFragment()
             findNavController().navigate(action)
         }

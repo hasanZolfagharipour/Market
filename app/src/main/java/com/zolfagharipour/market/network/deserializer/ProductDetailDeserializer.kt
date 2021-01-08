@@ -3,20 +3,19 @@ package com.zolfagharipour.market.network.deserializer
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
-import com.google.gson.JsonObject
-import com.zolfagharipour.market.data.room.entities.CategoryProduct
-import com.zolfagharipour.market.data.room.entities.Product
+import com.zolfagharipour.market.data.room.entities.CategoryModel
+import com.zolfagharipour.market.data.room.entities.ProductModel
 import java.lang.reflect.Type
 
 
-class ProductDetailDeserializer : JsonDeserializer<Product> {
+class ProductDetailDeserializer : JsonDeserializer<ProductModel> {
     override fun deserialize(
         json: JsonElement?,
         typeOfT: Type?,
         context: JsonDeserializationContext?
-    ): Product {
+    ): ProductModel {
 
-        val product: Product
+        val productModel: ProductModel
 
 
         val productObject = json!!.asJsonObject
@@ -37,13 +36,13 @@ class ProductDetailDeserializer : JsonDeserializer<Product> {
             relatedIds.add(ids)
         }
         val categoryObjects = productObject["categories"].asJsonArray
-        val categories = ArrayList<CategoryProduct>()
+        val categories = ArrayList<CategoryModel>()
         for (i in 0 until categoryObjects.size())
         {
             val categoryObject = categoryObjects[i].asJsonObject
             val ids = categoryObject["id"].asString
             val name = categoryObject["name"].asString
-            categories.add(CategoryProduct(ids, name))
+            categories.add(CategoryModel(ids, name))
         }
         val images = ArrayList<String>()
         for (j in 0 until imageObjects.size()) {
@@ -51,8 +50,8 @@ class ProductDetailDeserializer : JsonDeserializer<Product> {
             val imageUrl = imageObject["src"].asString
             images.add(imageUrl)
         }
-        product = Product(id, name, price, regularPrice, images, description, totalSale, relatedIds, categories, rate)
+        productModel = ProductModel(id, name, price, regularPrice, images, description, totalSale, relatedIds, categories, rate)
 
-        return product
+        return productModel
     }
 }

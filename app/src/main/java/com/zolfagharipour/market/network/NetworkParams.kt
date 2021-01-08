@@ -16,6 +16,17 @@ object NetworkParams {
     private const val ORDER = "order"
     private const val ORDER_ASC = "asc"
 
+    class CategoryID{
+        companion object{
+            const val DIGITAL_ID = "52"
+            const val FASHION_ID = "62"
+            const val ART_AND_BOOK_ID = "76"
+            const val SUPER_MARKET_ID = "81"
+            const val HEALTHY_ID = "121"
+            const val SPECIAL_ID = "119"
+        }
+    }
+
     val QUERY_OPTIONS_BASIC: HashMap<String, String> = object : HashMap<String, String>() {
         init {
             put(CONSUMER_KEY_TITLE, CONSUMER_KEY)
@@ -41,13 +52,47 @@ object NetworkParams {
         }
     }
 
-    fun QUERY_OPTIONS_PRODUCT_OF_CATEGORY(categoryId: String): HashMap<String, String> =
-            object : HashMap<String, String>(QUERY_OPTIONS_BASIC) {
+    fun queryOptionsProductOfCategory(categoryId: String): HashMap<String, String> = object : HashMap<String, String>(QUERY_OPTIONS_BASIC) {
                 init {
                     put("category", categoryId)
                 }
     }
 
+    val QUERY_OPTIONS_DIGITAL_CATEGORY: HashMap<String, String> = object : HashMap<String, String>(QUERY_OPTIONS_BASIC) {
+        init {
+            put("parent", CategoryID.DIGITAL_ID)
+        }
+    }
+
+    val QUERY_OPTIONS_FASHION_AND_MODEL_CATEGORY: HashMap<String, String> = object : HashMap<String, String>(QUERY_OPTIONS_BASIC) {
+        init {
+            put("parent", CategoryID.FASHION_ID)
+        }
+    }
+
+    val QUERY_OPTIONS_ART_AND_BOOK_CATEGORY: HashMap<String, String> = object : HashMap<String, String>(QUERY_OPTIONS_BASIC) {
+        init {
+            put("parent", CategoryID.ART_AND_BOOK_ID)
+        }
+    }
+
+    val QUERY_OPTIONS_SUPER_MARKET_CATEGORY: HashMap<String, String> = object : HashMap<String, String>(QUERY_OPTIONS_BASIC) {
+        init {
+            put("parent", CategoryID.SUPER_MARKET_ID)
+        }
+    }
+
+    val QUERY_OPTIONS_HEALTHY_CATEGORY: HashMap<String, String> = object : HashMap<String, String>(QUERY_OPTIONS_BASIC) {
+        init {
+            put("parent", CategoryID.HEALTHY_ID)
+        }
+    }
+
+    val QUERY_OPTIONS_SPECIAL_SALE_CATEGORY: HashMap<String, String> = object : HashMap<String, String>(QUERY_OPTIONS_BASIC) {
+        init {
+            put("parent", CategoryID.SPECIAL_ID)
+        }
+    }
 
 
 

@@ -2,14 +2,12 @@ package com.zolfagharipour.market.data.room.entities
 
 import android.text.Html
 import android.text.SpannableString
-import android.util.Log
-import com.zolfagharipour.market.other.TAG
 import com.zolfagharipour.market.other.Utilities
 import java.io.Serializable
 import kotlin.math.roundToInt
 
 
-data class Product(
+data class ProductModel(
     val id: String,
     val name: String,
     val currentPrice: String,
@@ -18,9 +16,9 @@ data class Product(
     val description: String = "",
     val totalSale: String = "",
     val relatedIds: ArrayList<String> = ArrayList(),
-    val categories: ArrayList<CategoryProduct> = ArrayList(),
+    val categories: ArrayList<CategoryModel> = ArrayList(),
     val rate: String = "",
-    val relatedProduct: ArrayList<Product> = ArrayList()
+    val relatedProductModel: ArrayList<ProductModel> = ArrayList()
 ): Serializable {
 
 

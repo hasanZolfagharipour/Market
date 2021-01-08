@@ -6,21 +6,26 @@ import com.google.gson.JsonElement
 import com.zolfagharipour.market.data.room.entities.CategoryModel
 import java.lang.reflect.Type
 
-class CategoryDeserializer: JsonDeserializer<CategoryModel> {
+class CategoriesDeserializer: JsonDeserializer<ArrayList<CategoryModel>> {
     override fun deserialize(
         json: JsonElement?,
         typeOfT: Type?,
         context: JsonDeserializationContext?
-    ): CategoryModel {
+    ): ArrayList<CategoryModel> {
 
-            val jsonObject = json!!.asJsonObject
+        val jsonArray = json!!.asJsonArray
+        val list = ArrayList<CategoryModel>()
+
+        for (i in 0 until jsonArray.size()){
+            val jsonObject = jsonArray[i].asJsonObject
 
             val id = jsonObject["id"].asString
             val name = jsonObject["name"].asString
             val imageObject = jsonObject["image"].asJsonObject
             val image = imageObject["src"].asString
 
-            return CategoryModel(id, name, image)
-
+            list.add(CategoryModel(id, name, image))
+        }
+        return list
     }
 }

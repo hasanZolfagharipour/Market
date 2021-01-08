@@ -36,6 +36,9 @@
         <action
             android:id="@+id/action_categoryFragment_to_detailFragment"
             app:destination="@id/detailFragment" />
+        <action
+            android:id="@+id/action_categoryFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
     </fragment>
     <fragment
         android:id="@+id/myMarketFragment"
@@ -65,7 +68,7 @@
         tools:layout="@layout/fragment_detail" >
         <argument
             android:name="product"
-            app:argType="com.zolfagharipour.market.data.room.entities.Product" />
+            app:argType="com.zolfagharipour.market.data.room.entities.ProductModel" />
         <action
             android:id="@+id/action_detailFragment_self"
             app:destination="@id/detailFragment" />

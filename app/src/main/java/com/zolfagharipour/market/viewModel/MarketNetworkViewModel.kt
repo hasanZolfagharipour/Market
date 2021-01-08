@@ -6,12 +6,12 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.google.gson.reflect.TypeToken
-import com.zolfagharipour.market.data.room.entities.Product
-import com.zolfagharipour.market.data.room.entities.CategoryProduct
+import com.zolfagharipour.market.data.room.entities.ProductModel
+import com.zolfagharipour.market.data.room.entities.CategoryModel
 import com.zolfagharipour.market.data.room.entities.ProductRepository
 import com.zolfagharipour.market.data.room.entities.SliderModel
 import com.zolfagharipour.market.network.*
-import com.zolfagharipour.market.network.deserializer.CategoryDeserializer
+import com.zolfagharipour.market.network.deserializer.CategoriesDeserializer
 import com.zolfagharipour.market.network.deserializer.ProductsDeserializer
 import com.zolfagharipour.market.network.deserializer.SliderDeserializer
 import kotlinx.coroutines.CoroutineScope
@@ -44,13 +44,13 @@ class MarketNetworkViewModel(application: Application) : AndroidViewModel(applic
 
     private suspend fun fetchInitialProducts() {
 
-        val typeTokenProduct = object: TypeToken<ArrayList<Product>>() {}.type
+        val typeTokenProduct = object: TypeToken<ArrayList<ProductModel>>() {}.type
         val typeTokenSlider = object: TypeToken<SliderModel>() {}.type
-        val typeTokenCategorySuggestion = object: TypeToken<ArrayList<CategoryProduct>>(){}.type
+        val typeTokenCategorySuggestion = object: TypeToken<ArrayList<CategoryModel>>(){}.type
 
         val typeAdapterProduct = ProductsDeserializer()
         val typeAdapterSlider = SliderDeserializer()
-        val typeAdapterCategorySuggestion = CategoryDeserializer()
+        val typeAdapterCategorySuggestion = CategoriesDeserializer()
 
 
         val productApi = RetrofitBuilder.getInstance(typeTokenProduct, typeAdapterProduct).create(ApiRequestService::class.java)
@@ -72,11 +72,11 @@ class MarketNetworkViewModel(application: Application) : AndroidViewModel(applic
             !categoryResponse.isSuccessful)
             return
 
-        ProductRepository.lastProducts= lastResponse.body()!!
-        ProductRepository.popularProducts = popularResponse.body()!!
+        ProductRepository.lastProductModels= lastResponse.body()!!
+        ProductRepository.popularProductModels = popularResponse.body()!!
         ProductRepository.sliderHome = sliderResponse.body()!!
-        ProductRepository.categoryProductSuggestion = categorySuggestionsResponse.body()!!
-        ProductRepository.mostRatingProducts = mostRatingResponse.body()!!
+        ProductRepository.categoryModelSuggestion = categorySuggestionsResponse.body()!!
+        ProductRepository.mostRatingProductModels = mostRatingResponse.body()!!
 
 
         withContext(Main){
@@ -87,25 +87,23 @@ class MarketNetworkViewModel(application: Application) : AndroidViewModel(applic
 
      suspend fun fetchProductsOfEachCategory(){
 
-        val typeTokenCategorySuggestion = object: TypeToken<ArrayList<CategoryProduct>>(){}.type
-        val typeAdapterCategorySuggestion = CategoryDeserializer()
+        val typeTokenCategorySuggestion = object: TypeToken<ArrayList<CategoryModel>>(){}.type
+        val typeAdapterCategorySuggestion = CategoriesDeserializer()
         val categoryApi = RetrofitBuilder.getInstance(typeTokenCategorySuggestion, typeAdapterCategorySuggestion).create(ApiRequestService::class.java)
         val categoryResponse = categoryApi.categories(NetworkParams.QUERY_OPTIONS_CATEGORY)
 
         if (!categoryResponse.isSuccessful)
             return
 
-        ProductRepository.categoryProducts = categoryResponse.body()!!
-        val typeTokenProduct = object: TypeToken<ArrayList<Product>>() {}.type
+        val typeTokenProduct = object: TypeToken<ArrayList<ProductModel>>() {}.type
         val typeAdapterProduct = ProductsDeserializer()
         val productApi = RetrofitBuilder.getInstance(typeTokenProduct, typeAdapterProduct).create(ApiRequestService::class.java)
 
         for (i in 0 until categoryResponse.body()!!.size) {
             val productResponse =
-                productApi.products(NetworkParams.QUERY_OPTIONS_PRODUCT_OF_CATEGORY(categoryResponse.body()!![i].id))
+                productApi.products(NetworkParams.queryOptionsProductOfCategory(categoryResponse.body()!![i].id))
             if (!productResponse.isSuccessful)
                 return
-            ProductRepository.categoryProducts[i].products.addAll(productResponse.body()!!)
         }
     }
 

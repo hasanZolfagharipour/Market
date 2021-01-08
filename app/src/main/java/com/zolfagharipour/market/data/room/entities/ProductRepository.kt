@@ -1,19 +1,14 @@
 package com.zolfagharipour.market.data.room.entities
-
-import androidx.lifecycle.MutableLiveData
-
 object ProductRepository {
 
-    lateinit var lastProducts: ArrayList<Product>
-    lateinit var popularProducts: ArrayList<Product>
-    lateinit var mostRatingProducts: ArrayList<Product>
-    lateinit var categoryProductSuggestion: ArrayList<CategoryProduct>
-    lateinit var categoryProducts: ArrayList<CategoryProduct>
+    lateinit var lastProductModels: ArrayList<ProductModel>
+    lateinit var popularProductModels: ArrayList<ProductModel>
+    lateinit var mostRatingProductModels: ArrayList<ProductModel>
+    lateinit var categoryModelSuggestion: ArrayList<CategoryModel>
 
-    var colorCategorySuggestions = listOf<String>("#EF3950", "#39AD00", "#0FAAC6", "#770FC6", "#F8A825", "#A63489", "#0041FF", "#F68618", "#EF3950", "#39AD00", "#0FAAC6", "#770FC6", "#F8A825", "#A63489", "#0041FF", "#F68618", "#EF3950", "#39AD00", "#0FAAC6", "#770FC6", "#F8A825", "#A63489", "#0041FF", "#F68618")
+
+    var colorCategorySuggestions = listOf("#EF3950", "#39AD00", "#0FAAC6", "#770FC6", "#F8A825", "#A63489", "#0041FF", "#F68618", "#EF3950", "#39AD00", "#0FAAC6", "#770FC6", "#F8A825", "#A63489", "#0041FF", "#F68618", "#EF3950", "#39AD00", "#0FAAC6", "#770FC6", "#F8A825", "#A63489", "#0041FF", "#F68618")
 
     var sliderHome: SliderModel? = null
-    var isCategoryFechItemFetched: Boolean = false
-
 
 }

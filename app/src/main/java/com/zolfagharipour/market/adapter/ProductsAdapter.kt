@@ -10,14 +10,14 @@ import androidx.navigation.NavDirections
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.zolfagharipour.market.R
-import com.zolfagharipour.market.data.room.entities.Product
+import com.zolfagharipour.market.data.room.entities.ProductModel
 import com.zolfagharipour.market.databinding.ItemRowProductsBinding
 import com.zolfagharipour.market.enums.FragmentHostEnum
 import com.zolfagharipour.market.view.fragment.CategoryFragmentDirections
 import com.zolfagharipour.market.view.fragment.DetailFragmentDirections
 import com.zolfagharipour.market.view.fragment.HomeFragmentDirections
 
-class ProductsAdapter(private val viewModel: AndroidViewModel, val lifecycleOwner: LifecycleOwner, val productList: ArrayList<Product>, val navController: NavController, val fragmentHostEnum: FragmentHostEnum) :
+class ProductsAdapter(private val viewModel: AndroidViewModel, val lifecycleOwner: LifecycleOwner, val productModelList: ArrayList<ProductModel>, val navController: NavController, val fragmentHostEnum: FragmentHostEnum) :
     RecyclerView.Adapter<ProductsAdapter.ProductsHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductsHolder {
@@ -29,11 +29,11 @@ class ProductsAdapter(private val viewModel: AndroidViewModel, val lifecycleOwne
     }
 
     override fun onBindViewHolder(holder: ProductsHolder, position: Int) {
-        holder.bindProducts(productList[position])
+        holder.bindProducts(productModelList[position])
     }
 
 
-    override fun getItemCount(): Int = productList.size
+    override fun getItemCount(): Int = productModelList.size
 
     inner class ProductsHolder(var binding: ItemRowProductsBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -43,17 +43,17 @@ class ProductsAdapter(private val viewModel: AndroidViewModel, val lifecycleOwne
 
         }
 
-        fun bindProducts(product: Product) {
-            binding.product = product
-            binding.imageViewPhotoProduct.load(product.images[0])
+        fun bindProducts(productModel: ProductModel) {
+            binding.product = productModel
+            binding.imageViewPhotoProduct.load(productModel.images[0])
             binding.cardViewContainerItemRowProduct.setOnClickListener {
                 var action: NavDirections? = null
                 if (fragmentHostEnum == FragmentHostEnum.HOME)
-                    action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(product)
+                    action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(productModel)
                 else if (fragmentHostEnum == FragmentHostEnum.CATEGORY)
-                    action = CategoryFragmentDirections.actionCategoryFragmentToDetailFragment(product)
+                    action = CategoryFragmentDirections.actionCategoryFragmentToDetailFragment(productModel)
                 else if (fragmentHostEnum == FragmentHostEnum.DETAIL)
-                    action = DetailFragmentDirections.actionDetailFragmentSelf(product)
+                    action = DetailFragmentDirections.actionDetailFragmentSelf(productModel)
                 navController.navigate(action!!)
             }
             binding.executePendingBindings()

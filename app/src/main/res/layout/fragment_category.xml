@@ -1,18 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".view.fragment.CategoryFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="viewModel"
+            type="com.zolfagharipour.market.viewModel.CategoryViewModel" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewCategoryFragment"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:visibility="@{viewModel.isDataFetched()? View.VISIBLE: View.INVISIBLE}"
+            android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="match_parent"
+            layout="@layout/search_view_box_layout"
+            android:id="@+id/searchViewBox"
+            android:layout_margin="@dimen/_12mdp"
+            android:layout_height="@dimen/_36mdp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewDigitalTitle"
+            android:text="@string/digital_stuffs_title"
+            android:textColor="@color/black"
+            android:fontFamily="@font/font_yekan"
+            app:layout_constraintTop_toBottomOf="@id/searchViewBox"
+            android:layout_marginTop="@dimen/_16mdp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="@dimen/_8mdp"
+            android:textSize="@dimen/_18font_mdp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewDigitalCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/textViewDigitalTitle"
+            tools:ignore="MissingConstraints"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewFashionAndModelTitle"
+            android:text="@string/fashion_and_model"
+            android:textColor="@color/black"
+            android:fontFamily="@font/font_yekan"
+            app:layout_constraintTop_toBottomOf="@id/recyclerViewDigitalCategory"
+            android:layout_marginTop="@dimen/_16mdp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="@dimen/_8mdp"
+            android:textSize="@dimen/_18font_mdp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewFashionAndModelCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/textViewFashionAndModelTitle"
+            tools:ignore="MissingConstraints"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewArtAndBookTitle"
+            android:text="@string/art_and_book"
+            android:textColor="@color/black"
+            android:fontFamily="@font/font_yekan"
+            app:layout_constraintTop_toBottomOf="@id/recyclerViewFashionAndModelCategory"
+            android:layout_marginTop="@dimen/_16mdp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="@dimen/_8mdp"
+            android:textSize="@dimen/_18font_mdp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewArtAndBookCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/textViewArtAndBookTitle"
+            tools:ignore="MissingConstraints"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewSuperMarketTitle"
+            android:text="@string/super_market"
+            android:textColor="@color/black"
+            android:fontFamily="@font/font_yekan"
+            app:layout_constraintTop_toBottomOf="@id/recyclerViewArtAndBookCategory"
+            android:layout_marginTop="@dimen/_16mdp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="@dimen/_8mdp"
+            android:textSize="@dimen/_18font_mdp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewSuperMarketCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/textViewSuperMarketTitle"
+            tools:ignore="MissingConstraints"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewOtherTitle"
+            android:text="@string/other"
+            android:textColor="@color/black"
+            android:fontFamily="@font/font_yekan"
+            app:layout_constraintTop_toBottomOf="@id/recyclerViewSuperMarketCategory"
+            android:layout_marginTop="@dimen/_16mdp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="@dimen/_8mdp"
+            android:textSize="@dimen/_18font_mdp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewOtherCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/textViewOtherTitle"
+            tools:ignore="MissingConstraints"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottieLoading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:lottie_rawRes="@raw/lottie_dot_gray_loading"
+            android:visibility="@{viewModel.isDataFetched()? View.GONE: View.VISIBLE}"
+            app:lottie_loop="true"
+            app:lottie_autoPlay="true"/>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </layout>

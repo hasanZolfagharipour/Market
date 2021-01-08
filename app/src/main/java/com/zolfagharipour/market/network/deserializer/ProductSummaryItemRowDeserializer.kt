@@ -3,16 +3,16 @@ package com.zolfagharipour.market.network.deserializer
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
-import com.zolfagharipour.market.data.room.entities.Product
+import com.zolfagharipour.market.data.room.entities.ProductModel
 import java.lang.reflect.Type
 
 
-class ProductSummaryForItemRowWithIdDeserializer : JsonDeserializer<Product> {
+class ProductSummaryItemRowDeserializer : JsonDeserializer<ProductModel> {
     override fun deserialize(
         json: JsonElement?,
         typeOfT: Type?,
         context: JsonDeserializationContext?
-    ): Product {
+    ): ProductModel {
 
 
         val productObject = json!!.asJsonObject
@@ -28,6 +28,6 @@ class ProductSummaryForItemRowWithIdDeserializer : JsonDeserializer<Product> {
         val imageUrl = imageObject["src"].asString
         images.add(imageUrl)
 
-        return Product(id, name, price, regularPrice, images)
+        return ProductModel(id, name, price, regularPrice, images)
     }
 }

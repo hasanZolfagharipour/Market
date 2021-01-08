@@ -21,5 +21,10 @@
     <string name="rate_of_this_product">امتیاز محصول</string>
     <string name="properties_of_product">مشخصات محصول</string>
     <string name="similar_product">محصولات مشابه</string>
+    <string name="digital_stuffs_title">کالای دیجیتال</string>
+    <string name="fashion_and_model">مد و پوشاک</string>
+    <string name="art_and_book">کتاب و هنر</string>
+    <string name="super_market">سوپر مارکت</string>
+    <string name="other">دیگر</string>
 
 </resources>

@@ -3,18 +3,18 @@ package com.zolfagharipour.market.network.deserializer
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
-import com.zolfagharipour.market.data.room.entities.Product
+import com.zolfagharipour.market.data.room.entities.ProductModel
 import java.lang.reflect.Type
 
 
-class ProductsDeserializer : JsonDeserializer<ArrayList<Product>> {
+class ProductsDeserializer : JsonDeserializer<ArrayList<ProductModel>> {
     override fun deserialize(
         json: JsonElement?,
         typeOfT: Type?,
         context: JsonDeserializationContext?
-    ): ArrayList<Product> {
+    ): ArrayList<ProductModel> {
 
-        val products = ArrayList<Product>()
+        val products = ArrayList<ProductModel>()
 
 
         val productArray = json!!.asJsonArray
@@ -34,7 +34,7 @@ class ProductsDeserializer : JsonDeserializer<ArrayList<Product>> {
             val imageUrl = imageObject["src"].asString
             images.add(imageUrl)
 
-            products.add(Product(id, name, price, regularPrice, images))
+            products.add(ProductModel(id, name, price, regularPrice, images))
         }
         return products
     }

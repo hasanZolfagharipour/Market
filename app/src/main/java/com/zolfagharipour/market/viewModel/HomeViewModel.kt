@@ -3,19 +3,18 @@ package com.zolfagharipour.market.viewModel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import com.zolfagharipour.market.data.room.entities.Product
-import com.zolfagharipour.market.data.room.entities.CategoryProduct
+import com.zolfagharipour.market.data.room.entities.ProductModel
+import com.zolfagharipour.market.data.room.entities.CategoryModel
 import com.zolfagharipour.market.data.room.entities.ProductRepository
 import com.zolfagharipour.market.data.room.entities.SliderModel
-import java.util.*
 import kotlin.collections.ArrayList
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
-    var lastProducts: MutableLiveData<ArrayList<Product>> = MutableLiveData(ProductRepository.lastProducts)
-    var popularProducts: MutableLiveData<ArrayList<Product>> = MutableLiveData(ProductRepository.popularProducts)
-    var mostRatingProduct: MutableLiveData<ArrayList<Product>> = MutableLiveData(ProductRepository.mostRatingProducts)
-    var categoryProductSuggestionList: MutableLiveData<ArrayList<CategoryProduct>> = MutableLiveData(ProductRepository.categoryProductSuggestion)
+    var lastProducts: MutableLiveData<ArrayList<ProductModel>> = MutableLiveData(ProductRepository.lastProductModels)
+    var popularProducts: MutableLiveData<ArrayList<ProductModel>> = MutableLiveData(ProductRepository.popularProductModels)
+    var mostRatingProductModel: MutableLiveData<ArrayList<ProductModel>> = MutableLiveData(ProductRepository.mostRatingProductModels)
+    var categoryModelSuggestionList: MutableLiveData<ArrayList<CategoryModel>> = MutableLiveData(ProductRepository.categoryModelSuggestion)
 
 
     var slider: MutableLiveData<SliderModel> = MutableLiveData(ProductRepository.sliderHome)
@@ -37,12 +36,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
            currentPosition - 1
         else
             currentPosition + 1
-    }
-
-    var isCategoryFechItemFetched: Boolean = ProductRepository.isCategoryFechItemFetched
-    set(value) {
-        ProductRepository.isCategoryFechItemFetched = value
-        field = value
     }
 
 
