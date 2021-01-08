@@ -55,7 +55,7 @@ class CategoryFragment : Fragment() {
     }
 
     private fun fetchDataOnObserver(){
-        viewModel.isDataFetched.observe(viewLifecycleOwner, {
+        viewModel.isDataFetched().observe(viewLifecycleOwner, {
             if (it) {
                 CoroutineScope(Dispatchers.Main).launch {
                     setRecyclerViews(
@@ -74,7 +74,6 @@ class CategoryFragment : Fragment() {
                         binding.recyclerViewSuperMarketCategory,
                         viewModel.superMarketCategories.value!!
                     )
-                    Log.d(TAG, "fetchDataOnObserver:................ ${viewModel.otherCategories.value!!.size}")
                     setRecyclerViews(
                         binding.recyclerViewOtherCategory,
                         viewModel.otherCategories.value!!

@@ -23,7 +23,7 @@
 
 
             <ImageView
-                android:id="@+id/imageViewPhotoItem"
+                android:id="@+id/imageViewPhoto"
                 android:layout_width="@dimen/_40mdp"
                 android:layout_height="@dimen/_40mdp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -32,7 +32,7 @@
                 android:padding="@dimen/_10mdp"/>
 
             <TextView
-                android:id="@+id/textViewItemRowCategoryLabel"
+                android:id="@+id/textViewLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_20mdp"
@@ -40,7 +40,19 @@
                 android:text="@{category.name}"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_16font_mdp"
-                app:layout_constraintTop_toBottomOf="@id/imageViewPhotoItem"
+                android:singleLine="true"
+                app:layout_constraintTop_toBottomOf="@id/imageViewPhoto"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <TextView
+                android:id="@+id/textViewCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_16mdp"
+                android:fontFamily="@font/font_yekan"
+                android:text="@{category.countFormatted}"
+                app:layout_constraintTop_toBottomOf="@id/textViewLabel"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 

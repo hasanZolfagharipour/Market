@@ -33,7 +33,7 @@ class CategoryAdapter(val viewModel: CategoryViewModel, val lifecycleOwner: Life
         }
         fun bindingRecyclerViews(categoryModel: CategoryModel){
             binding.category = categoryModel
-            binding.imageViewPhotoItem.load(categoryModel.image)
+            binding.imageViewPhoto.load(categoryModel.image)
             binding.executePendingBindings()
         }
     }

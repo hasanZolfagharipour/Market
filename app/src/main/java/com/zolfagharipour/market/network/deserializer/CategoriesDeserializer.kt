@@ -21,10 +21,12 @@ class CategoriesDeserializer: JsonDeserializer<ArrayList<CategoryModel>> {
 
             val id = jsonObject["id"].asString
             val name = jsonObject["name"].asString
+            val count = jsonObject["count"].asString
             val imageObject = jsonObject["image"].asJsonObject
             val image = imageObject["src"].asString
 
-            list.add(CategoryModel(id, name, image))
+
+            list.add(CategoryModel(id, name, image, count))
         }
         return list
     }
