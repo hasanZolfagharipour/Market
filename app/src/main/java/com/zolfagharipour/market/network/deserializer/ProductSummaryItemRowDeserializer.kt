@@ -12,10 +12,12 @@ class ProductSummaryItemRowDeserializer : JsonDeserializer<ProductModel> {
         json: JsonElement?,
         typeOfT: Type?,
         context: JsonDeserializationContext?
-    ): ProductModel {
+    ): ProductModel? {
 
 
         val productObject = json!!.asJsonObject
+        if (!productObject["purchasable"].asBoolean)
+            return null
 
         val id = productObject["id"].asString
         val name = productObject["name"].asString
@@ -23,7 +25,6 @@ class ProductSummaryItemRowDeserializer : JsonDeserializer<ProductModel> {
         val regularPrice = productObject["regular_price"].asString
         val imageObjects = productObject["images"].asJsonArray
         val images = ArrayList<String>()
-
         val imageObject = imageObjects[0].asJsonObject
         val imageUrl = imageObject["src"].asString
         images.add(imageUrl)

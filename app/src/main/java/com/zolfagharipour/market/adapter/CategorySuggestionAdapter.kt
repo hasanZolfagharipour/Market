@@ -6,18 +6,21 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
+import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.zolfagharipour.market.R
 import com.zolfagharipour.market.data.room.entities.CategoryModel
 import com.zolfagharipour.market.data.room.entities.ProductRepository
 import com.zolfagharipour.market.databinding.ItemRowSuggestionCategoryBinding
+import com.zolfagharipour.market.view.fragment.HomeFragmentDirections
 import com.zolfagharipour.market.viewModel.HomeViewModel
 
 class CategorySuggestionAdapter(
     val viewModel: HomeViewModel,
     val lifecycleOwner: LifecycleOwner,
-    private val categoryModelList: ArrayList<CategoryModel>
+    private val categoryModelList: ArrayList<CategoryModel>,
+    val navController: NavController
 ) : RecyclerView.Adapter<CategorySuggestionAdapter.CategorySuggestionHolder>() {
 
     inner class CategorySuggestionHolder(val binding: ItemRowSuggestionCategoryBinding) :
@@ -38,6 +41,10 @@ class CategorySuggestionAdapter(
             binding.circleImageViewItemRowSuggestionCategoryPhoto.circleBackgroundColor =
                 Color.parseColor(ProductRepository.colorCategorySuggestions[position])
             binding.cardViewContainerCircleImageView.setCardBackgroundColor(Color.parseColor(ProductRepository.colorCategorySuggestions[position]))
+            binding.root.setOnClickListener{
+                val action = HomeFragmentDirections.actionHomeFragmentToProductsCategoryFragment(categoryModel)
+                navController.navigate(action)
+            }
             binding.executePendingBindings()
         }
     }

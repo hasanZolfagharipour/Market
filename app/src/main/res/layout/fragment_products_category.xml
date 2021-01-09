@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="viewModel"
+            type="com.zolfagharipour.market.viewModel.ProductsCategoryViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewContainer"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_36mdp"
+            android:layout_margin="@dimen/_16mdp"
+            app:cardBackgroundColor="@color/colorGrayLight"
+            app:cardCornerRadius="8dp"
+            android:visibility="@{viewModel.isDataFetched()? View.VISIBLE: View.INVISIBLE}"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/searchViewHome"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:drawablePadding="@dimen/_8mdp"
+                android:gravity="center_vertical|start"
+                android:text="@{viewModel.searchTitle()}"
+                android:textSize="@dimen/_16font_mdp"
+                app:drawableStartCompat="@drawable/ic_search"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewItems"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/_16mdp"
+            android:visibility="@{viewModel.isDataFetched()? View.VISIBLE: View.INVISIBLE}"
+            app:layout_constraintTop_toBottomOf="@id/cardViewContainer"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+        <include
+            layout="@layout/lottie_loading_layout"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="@{viewModel.isDataFetched()? View.GONE: View.VISIBLE}"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>

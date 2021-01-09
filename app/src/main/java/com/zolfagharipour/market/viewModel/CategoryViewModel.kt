@@ -79,9 +79,9 @@ class CategoryViewModel(application: Application) : AndroidViewModel(application
             ProductRepository.otherCategories.postValue(list)
         }
 
-            ProductRepository.isDataFetched.postValue(true)
+            ProductRepository.isCategoriesDataFetched.postValue(true)
 
     }
 
-    fun isDataFetched(): LiveData<Boolean> = ProductRepository.isDataFetched
+    fun isDataFetched(): LiveData<Boolean> = ProductRepository.isCategoriesDataFetched
 }

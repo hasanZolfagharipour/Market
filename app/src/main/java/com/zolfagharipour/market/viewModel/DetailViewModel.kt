@@ -50,7 +50,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
             for (i in 0 until currentProductModel.relatedIds.size) {
                 val relatedProductResponse = apiSimilarProduct.product(currentProductModel.relatedIds[i], NetworkParams.QUERY_OPTIONS_BASIC)
-                if (relatedProductResponse.isSuccessful)
+                if (relatedProductResponse.isSuccessful && relatedProductResponse.body() != null)
                     relatedProducts.add(relatedProductResponse.body()!!)
             }
             currentProductModel.relatedProductModel.addAll(relatedProducts)

@@ -28,13 +28,14 @@ class ProductsDeserializer : JsonDeserializer<ArrayList<ProductModel>> {
             val price = productObject["price"].asString
             val regularPrice = productObject["regular_price"].asString
             val imageObjects = productObject["images"].asJsonArray
+            val rate = productObject["average_rating"].asString
             val images = ArrayList<String>()
 
             val imageObject = imageObjects[0].asJsonObject
             val imageUrl = imageObject["src"].asString
             images.add(imageUrl)
 
-            products.add(ProductModel(id, name, price, regularPrice, images))
+            products.add(ProductModel(id, name, price, regularPrice, images, rate = rate))
         }
         return products
     }

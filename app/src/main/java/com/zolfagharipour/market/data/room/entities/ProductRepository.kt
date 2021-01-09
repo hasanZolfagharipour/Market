@@ -14,7 +14,7 @@ object ProductRepository {
     val artAndBookCategories = MutableLiveData<ArrayList<CategoryModel>>()
     val superMarketCategories = MutableLiveData<ArrayList<CategoryModel>>()
     val otherCategories = MutableLiveData<ArrayList<CategoryModel>>()
-    var isDataFetched: MutableLiveData<Boolean> = MutableLiveData(false)
+    var isCategoriesDataFetched: MutableLiveData<Boolean> = MutableLiveData(false)
 
 
 

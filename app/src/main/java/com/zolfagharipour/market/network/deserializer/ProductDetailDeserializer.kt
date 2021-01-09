@@ -37,19 +37,19 @@ class ProductDetailDeserializer : JsonDeserializer<ProductModel> {
         }
         val categoryObjects = productObject["categories"].asJsonArray
         val categories = ArrayList<CategoryModel>()
-        for (i in 0 until categoryObjects.size())
-        {
+        for (i in 0 until categoryObjects.size()) {
             val categoryObject = categoryObjects[i].asJsonObject
             val ids = categoryObject["id"].asString
-            val name = categoryObject["name"].asString
-            categories.add(CategoryModel(ids, name))
+            val nameCategory = categoryObject["name"].asString
+            categories.add(CategoryModel(ids, nameCategory))
         }
         val images = ArrayList<String>()
-        for (j in 0 until imageObjects.size()) {
-            val imageObject = imageObjects[j].asJsonObject
+        for (i in 0 until imageObjects.size()) {
+            val imageObject = imageObjects[i].asJsonObject
             val imageUrl = imageObject["src"].asString
             images.add(imageUrl)
         }
+
         productModel = ProductModel(id, name, price, regularPrice, images, description, totalSale, relatedIds, categories, rate)
 
         return productModel

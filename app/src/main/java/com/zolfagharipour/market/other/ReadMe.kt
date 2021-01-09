@@ -29,4 +29,6 @@ package com.zolfagharipour.onlinemarket.other
 * long time of get item from internet using coroutine. should be check if is correct(see learning files).
 * marketViewModel -> liveData to repository
 * two api request is same.
+* change id name
+* check adapter to write execute binding
 * */

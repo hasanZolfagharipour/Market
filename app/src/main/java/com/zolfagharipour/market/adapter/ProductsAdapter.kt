@@ -50,8 +50,6 @@ class ProductsAdapter(private val viewModel: AndroidViewModel, val lifecycleOwne
                 var action: NavDirections? = null
                 if (fragmentHostEnum == FragmentHostEnum.HOME)
                     action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(productModel)
-                else if (fragmentHostEnum == FragmentHostEnum.CATEGORY)
-                    action = CategoryFragmentDirections.actionCategoryFragmentToDetailFragment(productModel)
                 else if (fragmentHostEnum == FragmentHostEnum.DETAIL)
                     action = DetailFragmentDirections.actionDetailFragmentSelf(productModel)
                 navController.navigate(action!!)

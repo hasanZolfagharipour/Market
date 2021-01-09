@@ -32,13 +32,10 @@ class SearchFragment : Fragment() {
         binding.searchView.isIconified = false
 
         binding.searchView.setOnCloseListener{
-            val action = SearchFragmentDirections.actionSearchFragmentToHomeFragment()
-            findNavController().navigate(action)
+            activity?.onBackPressed()
             true
         }
     }
-
-
 
 
 

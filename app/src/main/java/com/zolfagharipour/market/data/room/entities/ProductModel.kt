@@ -56,4 +56,12 @@ data class ProductModel(
 
     fun totalSaleFormatted():String = "($totalSale)"
 
+    fun rateFormattedString(): String {
+        val rateInt =  rate.toDouble().roundToInt()
+        if (rateInt == 0)
+            return "0"
+        else
+            return rate.toDouble().toString()
+    }
+
 }

@@ -71,7 +71,8 @@ class HomeFragment : Fragment() {
                 CategorySuggestionAdapter(
                     viewModel,
                     this@HomeFragment,
-                    viewModel.categoryModelSuggestionList.value!!
+                    viewModel.categoryModelSuggestionList.value!!,
+                    findNavController()
                 )
         }
     }

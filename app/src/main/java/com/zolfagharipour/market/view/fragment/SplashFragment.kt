@@ -9,6 +9,7 @@ import android.view.animation.AnimationUtils
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.zolfagharipour.market.R
 import com.zolfagharipour.market.databinding.FragmentSplashBinding
@@ -28,7 +29,7 @@ class SplashFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         viewModel = ViewModelProvider(requireActivity()).get(MarketNetworkViewModel::class.java)
-        CoroutineScope(Main).launch { viewModel.checkNetwork(this@SplashFragment) }
+        lifecycleScope.launch { viewModel.checkNetwork(this@SplashFragment) }
     }
 
     override fun onCreateView(
@@ -53,24 +54,20 @@ class SplashFragment : Fragment() {
         })
     }
 
-    private fun navigateToHomeFragment(isConnect: Boolean?) {
-        if (isConnect!!) {
-            CoroutineScope(Main).launch {
-                val action = SplashFragmentDirections.actionSplashFragmentToHomeFragment()
-                findNavController().navigate(action)
-            }
-        }
+    private fun navigateToHomeFragment(isConnect: Boolean) {
+        if (isConnect)
+                findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToHomeFragment())
     }
 
     private fun setAnimation() {
-        CoroutineScope(Main).launch {
+        lifecycleScope.launch(Main) {
             delay(500)
             val animation = AnimationUtils.loadAnimation(activity, android.R.anim.fade_in)
             animation.duration = 1000
             binding.txtSplashLogo.startAnimation(animation)
             binding.txtSplashLogo.text = getString(R.string.app_name)
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                binding.txtSplashLogo.setTypeface(resources.getFont(R.font.orbitron_bold))
+                binding.txtSplashLogo.typeface = resources.getFont(R.font.orbitron_bold)
             }
         }
 

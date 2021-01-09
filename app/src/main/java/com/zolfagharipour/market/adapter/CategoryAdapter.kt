@@ -12,6 +12,7 @@ import com.zolfagharipour.market.R
 import com.zolfagharipour.market.data.room.entities.CategoryModel
 import com.zolfagharipour.market.databinding.ItemRowCategoryBinding
 import com.zolfagharipour.market.enums.FragmentHostEnum
+import com.zolfagharipour.market.view.fragment.CategoryFragmentDirections
 import com.zolfagharipour.market.viewModel.CategoryViewModel
 
 class CategoryAdapter(val viewModel: CategoryViewModel, val lifecycleOwner: LifecycleOwner, private val categories: ArrayList<CategoryModel>, val navController: NavController): RecyclerView.Adapter<CategoryAdapter.CategoryHolder>() {
@@ -34,6 +35,9 @@ class CategoryAdapter(val viewModel: CategoryViewModel, val lifecycleOwner: Life
         fun bindingRecyclerViews(categoryModel: CategoryModel){
             binding.category = categoryModel
             binding.imageViewPhoto.load(categoryModel.image)
+            binding.root.setOnClickListener{
+                navController.navigate(CategoryFragmentDirections.actionCategoryFragmentToProductsCategoryFragment(categoryModel))
+            }
             binding.executePendingBindings()
         }
     }

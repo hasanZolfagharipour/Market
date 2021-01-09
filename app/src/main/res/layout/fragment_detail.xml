@@ -65,6 +65,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
                     android:progress="@{viewModel.productModel.rateFormatted()}"
+                    android:max="10"
                     android:mirrorForRtl="false"
                     android:clickable="false"
                     android:focusable="false"
@@ -231,18 +232,14 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/lottieLoading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:lottie_rawRes="@raw/lottie_dot_gray_loading"
-            app:lottie_loop="true"
+        <include
+            android:id="@+id/layoutLoading"
+            layout="@layout/lottie_loading_layout"
             android:visibility="@{viewModel.isDataFetched()? View.GONE: View.VISIBLE}"
-            app:lottie_autoPlay="true"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

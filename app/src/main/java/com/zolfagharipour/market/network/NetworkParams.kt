@@ -24,6 +24,7 @@ object NetworkParams {
             const val SUPER_MARKET_ID = "81"
             const val HEALTHY_ID = "121"
             const val SPECIAL_ID = "119"
+            const val SLIDER_ID = "608"
         }
     }
 
@@ -93,6 +94,7 @@ object NetworkParams {
             put("parent", CategoryID.SPECIAL_ID)
         }
     }
+
 
 
 

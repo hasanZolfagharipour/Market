@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 class DetailFragment : Fragment() {
     private lateinit var binding: FragmentDetailBinding
     private lateinit var viewModel: DetailViewModel
-    val args by navArgs<DetailFragmentArgs>()
+    private val args by navArgs<DetailFragmentArgs>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

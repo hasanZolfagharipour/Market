@@ -1,24 +1,24 @@
 package com.zolfagharipour.market.viewModel
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
+import androidx.lifecycle.*
 import com.google.gson.reflect.TypeToken
-import com.zolfagharipour.market.data.room.entities.ProductModel
 import com.zolfagharipour.market.data.room.entities.CategoryModel
+import com.zolfagharipour.market.data.room.entities.ProductModel
 import com.zolfagharipour.market.data.room.entities.ProductRepository
 import com.zolfagharipour.market.data.room.entities.SliderModel
-import com.zolfagharipour.market.network.*
+import com.zolfagharipour.market.network.ApiRequestService
+import com.zolfagharipour.market.network.CheckNetworkConnectivity
+import com.zolfagharipour.market.network.NetworkParams
+import com.zolfagharipour.market.network.RetrofitBuilder
 import com.zolfagharipour.market.network.deserializer.CategoriesDeserializer
 import com.zolfagharipour.market.network.deserializer.ProductsDeserializer
 import com.zolfagharipour.market.network.deserializer.SliderDeserializer
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Default
-import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class MarketNetworkViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -36,77 +36,94 @@ class MarketNetworkViewModel(application: Application) : AndroidViewModel(applic
             Observer { isConnected ->
                 isConnect.value = isConnected
                 if (isConnected)
-                    CoroutineScope(Default).launch { fetchInitialProducts() }
+                    fetchInitialProducts()
             }
         )
     }
 
 
-    private suspend fun fetchInitialProducts() {
+    private fun fetchInitialProducts() {
+        viewModelScope.launch(Default) {
+            val slider = async { fetchSliderItems() }
+            val suggestion = async { fetchSuggestionCategory() }
+            val last = async { fetchLastProduct() }
+            val popular = async { fetchPopularProduct() }
+            val most = async { fetchMostRating() }
 
-        val typeTokenProduct = object: TypeToken<ArrayList<ProductModel>>() {}.type
-        val typeTokenSlider = object: TypeToken<SliderModel>() {}.type
-        val typeTokenCategorySuggestion = object: TypeToken<ArrayList<CategoryModel>>(){}.type
+            if (slider.await() && suggestion.await() && last.await() && popular.await() && most.await())
+                isDataFetched.postValue(true)
+        }
+    }
 
-        val typeAdapterProduct = ProductsDeserializer()
+    private suspend fun fetchSliderItems(): Boolean {
+
+        val typeTokenSlider = object : TypeToken<SliderModel>() {}.type
         val typeAdapterSlider = SliderDeserializer()
+        val sliderApi = RetrofitBuilder.getInstance(typeTokenSlider, typeAdapterSlider)
+            .create(ApiRequestService::class.java)
+        val sliderResponse = sliderApi.sliderItems(
+            NetworkParams.CategoryID.SLIDER_ID,
+            NetworkParams.QUERY_OPTIONS_BASIC
+        )
+
+        if (!sliderResponse.isSuccessful) return false
+        ProductRepository.sliderHome = sliderResponse.body()!!
+        return true
+    }
+
+    private suspend fun fetchSuggestionCategory(): Boolean {
+
         val typeAdapterCategorySuggestion = CategoriesDeserializer()
+        val typeTokenCategorySuggestion = object : TypeToken<ArrayList<CategoryModel>>() {}.type
 
+        val categoryApi =
+            RetrofitBuilder.getInstance(typeTokenCategorySuggestion, typeAdapterCategorySuggestion)
+                .create(ApiRequestService::class.java)
+        val categorySuggestionsResponse = categoryApi.categories(NetworkParams.QUERY_OPTIONS_BASIC)
 
-        val productApi = RetrofitBuilder.getInstance(typeTokenProduct, typeAdapterProduct).create(ApiRequestService::class.java)
-        val sliderApi = RetrofitBuilder.getInstance(typeTokenSlider, typeAdapterSlider).create(ApiRequestService::class.java)
-        val categoryApi = RetrofitBuilder.getInstance(typeTokenCategorySuggestion, typeAdapterCategorySuggestion).create(ApiRequestService::class.java)
+        if (!categorySuggestionsResponse.isSuccessful) return false
+        ProductRepository.categoryModelSuggestion = categorySuggestionsResponse.body()!!
+        return true
+    }
+
+    private suspend fun fetchLastProduct(): Boolean {
+        val typeTokenProduct = object : TypeToken<ArrayList<ProductModel>>() {}.type
+        val typeAdapterProduct = ProductsDeserializer()
+        val productApi = RetrofitBuilder.getInstance(typeTokenProduct, typeAdapterProduct)
+            .create(ApiRequestService::class.java)
 
         val lastResponse = productApi.products(NetworkParams.QUERY_OPTIONS_BASIC)
-        val popularResponse = productApi.products(NetworkParams.QUERY_OPTIONS_POPULAR_PRODUCTS)
-        val sliderResponse = sliderApi.sliderItems("608", NetworkParams.QUERY_OPTIONS_BASIC)
-        val mostRatingResponse = productApi.products(NetworkParams.QUERY_OPTIONS_MOST_RATING_PRODUCTS)
-        val categorySuggestionsResponse = categoryApi.categories(NetworkParams.QUERY_OPTIONS_BASIC)
-        val categoryResponse = categoryApi.categories(NetworkParams.QUERY_OPTIONS_CATEGORY)
+        if (!lastResponse.isSuccessful) return false
 
-        if (!lastResponse.isSuccessful &&
-            !popularResponse.isSuccessful &&
-            !sliderResponse.isSuccessful &&
-            !categorySuggestionsResponse.isSuccessful &&
-            !mostRatingResponse.isSuccessful &&
-            !categoryResponse.isSuccessful)
-            return
-
-        ProductRepository.lastProductModels= lastResponse.body()!!
-        ProductRepository.popularProductModels = popularResponse.body()!!
-        ProductRepository.sliderHome = sliderResponse.body()!!
-        ProductRepository.categoryModelSuggestion = categorySuggestionsResponse.body()!!
-        ProductRepository.mostRatingProductModels = mostRatingResponse.body()!!
-
-
-        withContext(Main){
-            isDataFetched.value = true
-        }
-
+        ProductRepository.lastProductModels = lastResponse.body()!!
+        return true
     }
 
-     suspend fun fetchProductsOfEachCategory(){
+    private suspend fun fetchPopularProduct(): Boolean {
 
-        val typeTokenCategorySuggestion = object: TypeToken<ArrayList<CategoryModel>>(){}.type
-        val typeAdapterCategorySuggestion = CategoriesDeserializer()
-        val categoryApi = RetrofitBuilder.getInstance(typeTokenCategorySuggestion, typeAdapterCategorySuggestion).create(ApiRequestService::class.java)
-        val categoryResponse = categoryApi.categories(NetworkParams.QUERY_OPTIONS_CATEGORY)
-
-        if (!categoryResponse.isSuccessful)
-            return
-
-        val typeTokenProduct = object: TypeToken<ArrayList<ProductModel>>() {}.type
+        val typeTokenProduct = object : TypeToken<ArrayList<ProductModel>>() {}.type
         val typeAdapterProduct = ProductsDeserializer()
-        val productApi = RetrofitBuilder.getInstance(typeTokenProduct, typeAdapterProduct).create(ApiRequestService::class.java)
+        val productApi = RetrofitBuilder.getInstance(typeTokenProduct, typeAdapterProduct)
+            .create(ApiRequestService::class.java)
 
-        for (i in 0 until categoryResponse.body()!!.size) {
-            val productResponse =
-                productApi.products(NetworkParams.queryOptionsProductOfCategory(categoryResponse.body()!![i].id))
-            if (!productResponse.isSuccessful)
-                return
-        }
+        val popularResponse = productApi.products(NetworkParams.QUERY_OPTIONS_POPULAR_PRODUCTS)
+        if (!popularResponse.isSuccessful) return false
+
+        ProductRepository.popularProductModels = popularResponse.body()!!
+        return true
     }
 
+    private suspend fun fetchMostRating(): Boolean {
+        val typeTokenProduct = object : TypeToken<ArrayList<ProductModel>>() {}.type
+        val typeAdapterProduct = ProductsDeserializer()
+        val productApi = RetrofitBuilder.getInstance(typeTokenProduct, typeAdapterProduct)
+            .create(ApiRequestService::class.java)
 
+        val mostRatingResponse =
+            productApi.products(NetworkParams.QUERY_OPTIONS_MOST_RATING_PRODUCTS)
+        if (!mostRatingResponse.isSuccessful) return false
 
+        ProductRepository.mostRatingProductModels = mostRatingResponse.body()!!
+        return true
+    }
 }
