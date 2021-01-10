@@ -10,55 +10,110 @@ import com.zolfagharipour.market.network.NetworkParams
 import com.zolfagharipour.market.network.RetrofitBuilder
 import com.zolfagharipour.market.network.deserializer.ProductDetailDeserializer
 import com.zolfagharipour.market.network.deserializer.ProductSummaryItemRowDeserializer
+import com.zolfagharipour.market.network.deserializer.RelatedIdDeserializer
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
 
 class DetailViewModel(application: Application) : AndroidViewModel(application) {
 
     var isDataFetched: MutableLiveData<Boolean> = MutableLiveData(false)
+    var isSimilarProductFetched: MutableLiveData<Boolean> = MutableLiveData(false)
+
     private var networkConnectivity = CheckNetworkConnectivity(application)
     private lateinit var lifecycleOwner: LifecycleOwner
-    var productModel: MutableLiveData<ProductModel> = MutableLiveData()
+    var product: MutableLiveData<ProductModel> = MutableLiveData()
 
-    fun checkNetwork(lifecycleOwner: LifecycleOwner, productModel: ProductModel) {
+    private lateinit var apiSimilarProduct: ApiRequestService
+    private val relatedProducts = ArrayList<ProductModel>()
+
+    fun checkNetwork(lifecycleOwner: LifecycleOwner, product: ProductModel) {
         this.lifecycleOwner = lifecycleOwner
         networkConnectivity.observe(
             lifecycleOwner,
             Observer { isConnected ->
                 if (isConnected)
-                    CoroutineScope(IO).launch { fetchProductDetail(productModel) }
+                    fetchItems(product)
             }
         )
+    }
+
+    private fun fetchItems(product: ProductModel) {
+        viewModelScope.launch(IO) {
+            async { fetchProductDetail(product) }
+            async { fetchSimilarProduct(product) }
+        }
     }
 
     private suspend fun fetchProductDetail(productModel: ProductModel) {
         val typeToken = object : TypeToken<ProductModel>() {}.type
         val typeAdapter = ProductDetailDeserializer()
-
         val api = RetrofitBuilder.getInstance(typeToken, typeAdapter)
             .create(ApiRequestService::class.java)
 
 
         val productResponse = api.product(productModel.id, NetworkParams.QUERY_OPTIONS_BASIC)
 
+
+        val tempRelatedProduct = ArrayList<ProductModel>()
+
         if (productResponse.isSuccessful) {
-            val relatedProducts = ArrayList<ProductModel>()
-            val currentProductModel: ProductModel = productResponse.body()!!
+            val tempProduct = productResponse.body()
 
-            val apiSimilarProduct = RetrofitBuilder.getInstance(typeToken, ProductSummaryItemRowDeserializer()).create(ApiRequestService::class.java)
-
-            for (i in 0 until currentProductModel.relatedIds.size) {
-                val relatedProductResponse = apiSimilarProduct.product(currentProductModel.relatedIds[i], NetworkParams.QUERY_OPTIONS_BASIC)
-                if (relatedProductResponse.isSuccessful && relatedProductResponse.body() != null)
-                    relatedProducts.add(relatedProductResponse.body()!!)
+            val apiSimilarProduct =
+                RetrofitBuilder.getInstance(typeToken, ProductSummaryItemRowDeserializer())
+                    .create(ApiRequestService::class.java)
+            for (i in 0 until tempProduct!!.relatedIds.size) {
+                val relatedProductResponse = apiSimilarProduct.product(
+                    tempProduct.relatedIds[i],
+                    NetworkParams.QUERY_OPTIONS_BASIC
+                )
+                if (relatedProductResponse.isSuccessful)
+                    relatedProductResponse.body()?.let { tempRelatedProduct.add(it) }
             }
-            currentProductModel.relatedProductModel.addAll(relatedProducts)
 
-            withContext(Main) {
-                this@DetailViewModel.productModel.postValue(currentProductModel)
-                isDataFetched.postValue(true)
+            tempProduct.relatedProductModel.addAll(tempRelatedProduct)
+            product.postValue(tempProduct)
+            isDataFetched.postValue(true)
+        }
+    }
+
+    private suspend fun fetchSimilarProduct(product: ProductModel) {
+
+        val typeToken = object : TypeToken<ProductModel>() {}.type
+        val typeAdapter = RelatedIdDeserializer()
+        val api = RetrofitBuilder.getInstance(typeToken, typeAdapter)
+            .create(ApiRequestService::class.java)
+        val productResponse = api.product(product.id, NetworkParams.QUERY_OPTIONS_BASIC)
+
+        if (productResponse.isSuccessful) {
+            val tempProduct = productResponse.body()
+
+            apiSimilarProduct = RetrofitBuilder.getInstance(typeToken, ProductSummaryItemRowDeserializer()).create(ApiRequestService::class.java)
+
+            val deferred = ArrayList<Deferred<ProductModel?>>()
+            viewModelScope.launch(IO) {
+            for (i in 0 until tempProduct!!.relatedIds.size) {
+                async { fetchSimilarItem(tempProduct.relatedIds[i]) }.let {
+                    deferred.add(it)
+                }
+            }
+
+                for (i in 0 until deferred.size)
+                {
+                    deferred[i].await()?.let { relatedProducts.add(it) }
+                }
+                this@DetailViewModel.product.value!!.relatedProductModel.addAll(relatedProducts)
+                isSimilarProductFetched.postValue(true)
+
             }
         }
+    }
+
+    private suspend fun fetchSimilarItem(id: String):ProductModel? {
+        val relatedProductResponse = apiSimilarProduct.product(id, NetworkParams.QUERY_OPTIONS_BASIC)
+        return if (relatedProductResponse.isSuccessful && relatedProductResponse.body() != null)
+            relatedProductResponse.body()
+        else
+            null
     }
 }

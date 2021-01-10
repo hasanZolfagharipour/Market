@@ -2,6 +2,8 @@ package com.zolfagharipour.market.data.room.entities
 
 import android.text.Html
 import android.text.SpannableString
+import android.util.Log
+import com.zolfagharipour.market.other.TAG
 import com.zolfagharipour.market.other.Utilities
 import java.io.Serializable
 import kotlin.math.roundToInt
@@ -18,7 +20,7 @@ data class ProductModel(
     val relatedIds: ArrayList<String> = ArrayList(),
     val categories: ArrayList<CategoryModel> = ArrayList(),
     val rate: String = "",
-    val relatedProductModel: ArrayList<ProductModel> = ArrayList()
+    var relatedProductModel: ArrayList<ProductModel> = ArrayList()
 ): Serializable {
 
 

@@ -1,10 +1,8 @@
 package com.zolfagharipour.market.viewModel
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
+import android.util.Log
+import androidx.lifecycle.*
 import com.google.gson.reflect.TypeToken
 import com.zolfagharipour.market.data.room.entities.CategoryModel
 import com.zolfagharipour.market.data.room.entities.ProductModel
@@ -13,6 +11,7 @@ import com.zolfagharipour.market.network.CheckNetworkConnectivity
 import com.zolfagharipour.market.network.NetworkParams
 import com.zolfagharipour.market.network.RetrofitBuilder
 import com.zolfagharipour.market.network.deserializer.ProductsDeserializer
+import com.zolfagharipour.market.other.TAG
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
@@ -33,7 +32,7 @@ class ProductsCategoryViewModel(application: Application) : AndroidViewModel(app
             lifecycleOwner,
             Observer { isConnected ->
                 if (isConnected)
-                    CoroutineScope(IO).launch { fetchItems() }
+                    viewModelScope.launch(IO) { fetchItems() }
             }
         )
     }
@@ -43,11 +42,9 @@ class ProductsCategoryViewModel(application: Application) : AndroidViewModel(app
         val typeToken = object : TypeToken<ArrayList<ProductModel>>() {}.type
         val typeAdapter = ProductsDeserializer()
 
-        val api = RetrofitBuilder.getInstance(typeToken, typeAdapter)
-            .create(ApiRequestService::class.java)
+        val api = RetrofitBuilder.getInstance(typeToken, typeAdapter).create(ApiRequestService::class.java)
 
-        val categoryResponse =
-            api.products(NetworkParams.queryOptionsProductOfCategory(category.id))
+        val categoryResponse = api.products(NetworkParams.queryOptionsProductOfCategory(category.id))
         if (categoryResponse.isSuccessful) {
             category.products = categoryResponse.body()!!
             isDataFetched.postValue(true)

@@ -23,6 +23,7 @@ import com.zolfagharipour.market.viewModel.HomeViewModel
 import com.zolfagharipour.market.viewModel.MarketNetworkViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 
 class CategoryFragment : Fragment() {
@@ -34,14 +35,9 @@ class CategoryFragment : Fragment() {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(CategoryViewModel::class.java)
         viewModel.checkNetwork(this)
-
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_category, container, false)
         return binding.root
     }
@@ -57,27 +53,12 @@ class CategoryFragment : Fragment() {
     private fun fetchDataOnObserver(){
         viewModel.isDataFetched().observe(viewLifecycleOwner, {
             if (it) {
-                CoroutineScope(Dispatchers.Main).launch {
-                    setRecyclerViews(
-                        binding.recyclerViewDigitalCategory,
-                        viewModel.digitalCategories.value!!
-                    )
-                    setRecyclerViews(
-                        binding.recyclerViewFashionAndModelCategory,
-                        viewModel.fashionCategories.value!!
-                    )
-                    setRecyclerViews(
-                        binding.recyclerViewArtAndBookCategory,
-                        viewModel.artAndBookCategories.value!!
-                    )
-                    setRecyclerViews(
-                        binding.recyclerViewSuperMarketCategory,
-                        viewModel.superMarketCategories.value!!
-                    )
-                    setRecyclerViews(
-                        binding.recyclerViewOtherCategory,
-                        viewModel.otherCategories.value!!
-                    )
+                lifecycleScope.launch(Main) {
+                    setRecyclerViews(binding.recyclerViewDigitalCategory, viewModel.digitalCategories.value!!)
+                    setRecyclerViews(binding.recyclerViewFashionAndModelCategory, viewModel.fashionCategories.value!!)
+                    setRecyclerViews(binding.recyclerViewArtAndBookCategory, viewModel.artAndBookCategories.value!!)
+                    setRecyclerViews(binding.recyclerViewSuperMarketCategory, viewModel.superMarketCategories.value!!)
+                    setRecyclerViews(binding.recyclerViewOtherCategory, viewModel.otherCategories.value!!)
                 }
             }
         })

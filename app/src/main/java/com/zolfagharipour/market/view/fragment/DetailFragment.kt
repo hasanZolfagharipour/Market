@@ -1,12 +1,14 @@
 package com.zolfagharipour.market.view.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,6 +19,7 @@ import com.zolfagharipour.market.adapter.ProductsAdapter
 import com.zolfagharipour.market.data.room.entities.ProductModel
 import com.zolfagharipour.market.databinding.FragmentDetailBinding
 import com.zolfagharipour.market.enums.FragmentHostEnum
+import com.zolfagharipour.market.other.TAG
 import com.zolfagharipour.market.viewModel.DetailViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Main
@@ -46,13 +49,22 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.viewModel = viewModel
-        CoroutineScope(Main).launch {
-            viewModel.productModel.observe(viewLifecycleOwner, {
+        lifecycleScope.launch {
+            viewModel.product.observe(viewLifecycleOwner, {
                 setSlider(it)
                 setCategoryTagRecyclerView(it)
-                setSimilarProductRecyclerView(it)
+
             })
+
+
         }
+
+        viewModel.isSimilarProductFetched.observe(viewLifecycleOwner, {
+
+            if (it) {
+                setSimilarProductRecyclerView(viewModel.product.value!!)
+            }
+        })
     }
 
     private fun setSlider(productModel: ProductModel) {
@@ -74,7 +86,7 @@ class DetailFragment : Fragment() {
                 false
             )
             adapter =
-                CategoryTagInProductAdapter(viewModel, this@DetailFragment, productModel.categories)
+                CategoryTagInProductAdapter(viewModel, this@DetailFragment, productModel.categories, findNavController())
         }
     }
 

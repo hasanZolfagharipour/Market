@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -47,7 +48,7 @@ class ProductsCategoryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.isDataFetched.observe(viewLifecycleOwner, {
             if (it)
-                CoroutineScope(Main).launch { setRecyclerView() }
+                lifecycleScope.launch { setRecyclerView() }
         })
     }
     private fun setRecyclerView(){

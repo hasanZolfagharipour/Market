@@ -29,12 +29,12 @@ class ProductDetailDeserializer : JsonDeserializer<ProductModel> {
         val totalSale = productObject["total_sales"].asString
         val rate = productObject["average_rating"].asString
         val relatedIds: ArrayList<String> = ArrayList()
-        val relatedIdObjects = productObject["related_ids"].asJsonArray
+        /*val relatedIdObjects = productObject["related_ids"].asJsonArray
 
         for (i in 0 until relatedIdObjects.size()){
             val ids = relatedIdObjects[i].asString
             relatedIds.add(ids)
-        }
+        }*/
         val categoryObjects = productObject["categories"].asJsonArray
         val categories = ArrayList<CategoryModel>()
         for (i in 0 until categoryObjects.size()) {

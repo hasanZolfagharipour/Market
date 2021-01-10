@@ -18,7 +18,7 @@ import com.zolfagharipour.market.viewModel.ProductsCategoryViewModel
 class ProductsInCategoryAdapter(
     val viewModel: ProductsCategoryViewModel,
     val lifecycleOwner: LifecycleOwner,
-    val list: ArrayList<ProductModel>,
+    private val list: ArrayList<ProductModel>,
     val navController: NavController
 ) :
     RecyclerView.Adapter<ProductsInCategoryAdapter.ProductsInCategoryHolder>() {
@@ -47,7 +47,6 @@ class ProductsInCategoryAdapter(
     ))
 
     override fun onBindViewHolder(holder: ProductsInCategoryHolder, position: Int) {
-        Log.d(TAG, "onBindViewHolder: .......................${list[0].name}")
        holder.bindingItems(list[position])
     }
 

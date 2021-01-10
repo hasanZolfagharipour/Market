@@ -41,7 +41,6 @@ class MarketNetworkViewModel(application: Application) : AndroidViewModel(applic
         )
     }
 
-
     private fun fetchInitialProducts() {
         viewModelScope.launch(Default) {
             val slider = async { fetchSliderItems() }
