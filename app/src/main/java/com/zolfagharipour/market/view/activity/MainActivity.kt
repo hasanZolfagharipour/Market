@@ -13,6 +13,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.zolfagharipour.market.R
+import com.zolfagharipour.market.data.room.entities.ProductRepository
 import com.zolfagharipour.market.databinding.ActivityMainBinding
 import com.zolfagharipour.market.other.ShowToast
 import kotlinx.coroutines.Dispatchers.IO

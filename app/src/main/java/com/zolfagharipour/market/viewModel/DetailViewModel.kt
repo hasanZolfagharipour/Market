@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.*
 import com.google.gson.reflect.TypeToken
 import com.zolfagharipour.market.data.room.entities.ProductModel
+import com.zolfagharipour.market.data.room.entities.ProductRepository
 import com.zolfagharipour.market.network.ApiRequestService
 import com.zolfagharipour.market.network.CheckNetworkConnectivity
 import com.zolfagharipour.market.network.NetworkParams
@@ -19,6 +20,9 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     var isDataFetched: MutableLiveData<Boolean> = MutableLiveData(false)
     var isSimilarProductFetched: MutableLiveData<Boolean> = MutableLiveData(false)
 
+    var showLoading: MutableLiveData<Boolean> = MutableLiveData(true)
+    var showDisconnected: MutableLiveData<Boolean> = MutableLiveData(false)
+
     private var networkConnectivity = CheckNetworkConnectivity(application)
     private lateinit var lifecycleOwner: LifecycleOwner
     var product: MutableLiveData<ProductModel> = MutableLiveData()
@@ -31,16 +35,49 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         networkConnectivity.observe(
             lifecycleOwner,
             Observer { isConnected ->
+                showLoading(isConnected)
+                showDisconnected(isConnected)
                 if (isConnected)
                     fetchItems(product)
             }
         )
     }
 
+    private fun showDisconnected(isConnected: Boolean) {
+        if (isConnected)
+            showDisconnected.postValue(false)
+        else{
+            isDataFetched.observe(owner = lifecycleOwner, onChanged = {
+                if (it)
+                    showDisconnected.postValue(false)
+                else
+                    showDisconnected.postValue(true)
+            })
+        }
+
+    }
+
+    private fun showLoading(isConnected: Boolean){
+        isDataFetched.observe(owner = lifecycleOwner, onChanged = { itOuter ->
+            if (itOuter)
+                showLoading.postValue(false)
+            else {
+                if (isConnected)
+                    showLoading.postValue(true)
+                else
+                    showLoading.postValue(false)
+            }
+        })
+    }
+
     private fun fetchItems(product: ProductModel) {
         viewModelScope.launch(IO) {
-            async { fetchProductDetail(product) }
-            async { fetchSimilarProduct(product) }
+            async {
+                if (!isDataFetched.value!!)
+                fetchProductDetail(product) }
+            async {
+                if (!isSimilarProductFetched.value!!)
+                fetchSimilarProduct(product) }
         }
     }
 

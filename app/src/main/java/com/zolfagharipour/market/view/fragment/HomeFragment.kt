@@ -1,6 +1,7 @@
 package com.zolfagharipour.market.view.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +22,7 @@ import com.zolfagharipour.market.adapter.ProductsAdapter
 import com.zolfagharipour.market.data.room.entities.ProductModel
 import com.zolfagharipour.market.databinding.FragmentHomeBinding
 import com.zolfagharipour.market.enums.FragmentHostEnum
+import com.zolfagharipour.market.other.TAG
 import com.zolfagharipour.market.viewModel.HomeViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.Default
@@ -46,7 +48,6 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.viewModel = viewModel
-
 
         lifecycleScope.launch(Main){
             setSlider()

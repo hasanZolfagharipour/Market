@@ -1,7 +1,6 @@
 package com.zolfagharipour.market.view.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,12 +16,7 @@ import com.zolfagharipour.market.R
 import com.zolfagharipour.market.adapter.CategoryAdapter
 import com.zolfagharipour.market.data.room.entities.CategoryModel
 import com.zolfagharipour.market.databinding.FragmentCategoryBinding
-import com.zolfagharipour.market.other.TAG
 import com.zolfagharipour.market.viewModel.CategoryViewModel
-import com.zolfagharipour.market.viewModel.HomeViewModel
-import com.zolfagharipour.market.viewModel.MarketNetworkViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 
@@ -51,7 +45,7 @@ class CategoryFragment : Fragment() {
     }
 
     private fun fetchDataOnObserver(){
-        viewModel.isDataFetched().observe(viewLifecycleOwner, {
+        viewModel.isDataFetched.observe(viewLifecycleOwner, {
             if (it) {
                 lifecycleScope.launch(Main) {
                     setRecyclerViews(binding.recyclerViewDigitalCategory, viewModel.digitalCategories.value!!)

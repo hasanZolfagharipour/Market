@@ -235,11 +235,19 @@
         <include
             android:id="@+id/layoutLoading"
             layout="@layout/lottie_loading_layout"
-            android:visibility="@{viewModel.isDataFetched()? View.GONE: View.VISIBLE}"
+            android:visibility="@{viewModel.showLoading? View.VISIBLE: View.GONE}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <include
+            layout="@layout/error_in_connection"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="@{viewModel.showDisconnected? View.VISIBLE: View.GONE}"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

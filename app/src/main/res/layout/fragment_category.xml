@@ -17,7 +17,7 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="@{viewModel.isDataFetched()? View.VISIBLE: View.INVISIBLE}"
+            android:visibility="@{viewModel.isDataFetched? View.VISIBLE: View.INVISIBLE}"
             android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -137,12 +137,21 @@
         <include
             android:id="@+id/layoutLoading"
             layout="@layout/lottie_loading_layout"
-
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:visibility="@{viewModel.isDataFetched()? View.GONE: View.VISIBLE}"/>
+            android:visibility="@{viewModel.showLoading? View.VISIBLE: View.GONE}"/>
+
+        <include
+            layout="@layout/error_in_connection"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="@{viewModel.showDisconnected? View.VISIBLE: View.GONE}"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -13,8 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.zolfagharipour.market.R
 import com.zolfagharipour.market.databinding.FragmentSplashBinding
-import com.zolfagharipour.market.viewModel.MarketNetworkViewModel
-import kotlinx.coroutines.CoroutineScope
+import com.zolfagharipour.market.viewModel.SplashViewModel
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -23,12 +22,12 @@ import kotlinx.coroutines.launch
 class SplashFragment : Fragment() {
 
     private lateinit var binding: FragmentSplashBinding
-    private lateinit var viewModel: MarketNetworkViewModel
+    private lateinit var viewModel: SplashViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel = ViewModelProvider(requireActivity()).get(MarketNetworkViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity()).get(SplashViewModel::class.java)
         lifecycleScope.launch { viewModel.checkNetwork(this@SplashFragment) }
     }
 

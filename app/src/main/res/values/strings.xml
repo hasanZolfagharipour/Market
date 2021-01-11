@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">market</string>
     <string name="retry">تلاش مجدد</string>
-    <string name="error_in_connection">خطا در اتصال به اینترنت…</string>
+    <string name="error_in_connection">خطا در برقراری ارتباط…</string>
 
     <string name="home">خانه</string>
     <string name="category">دسته بندی ها</string>

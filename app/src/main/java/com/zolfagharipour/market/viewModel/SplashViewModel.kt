@@ -20,7 +20,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
-class MarketNetworkViewModel(application: Application) : AndroidViewModel(application) {
+class SplashViewModel(application: Application) : AndroidViewModel(application) {
 
 
     var isConnect: MutableLiveData<Boolean> = MutableLiveData(true)
@@ -31,14 +31,11 @@ class MarketNetworkViewModel(application: Application) : AndroidViewModel(applic
 
     fun checkNetwork(lifecycleOwner: LifecycleOwner) {
         this.lifecycleOwner = lifecycleOwner
-        networkConnectivity.observe(
-            lifecycleOwner,
-            Observer { isConnected ->
+        networkConnectivity.observe(lifecycleOwner, Observer { isConnected ->
                 isConnect.value = isConnected
                 if (isConnected)
                     fetchInitialProducts()
-            }
-        )
+            })
     }
 
     private fun fetchInitialProducts() {

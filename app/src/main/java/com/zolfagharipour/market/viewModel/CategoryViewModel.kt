@@ -11,9 +11,6 @@ import com.zolfagharipour.market.network.NetworkParams
 import com.zolfagharipour.market.network.RetrofitBuilder
 import com.zolfagharipour.market.network.deserializer.CategoriesDeserializer
 import com.zolfagharipour.market.network.deserializer.CategoryDeserializer
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -24,7 +21,9 @@ class CategoryViewModel(application: Application) : AndroidViewModel(application
     private var networkConnectivity = CheckNetworkConnectivity(application)
     private lateinit var lifecycleOwner: LifecycleOwner
 
-
+    var isDataFetched: LiveData<Boolean> = ProductRepository.isCategoriesDataFetched
+    var showLoading: MutableLiveData<Boolean> = MutableLiveData(true)
+    var showDisconnected: MutableLiveData<Boolean> = ProductRepository.showDisconnect
 
     val digitalCategories = ProductRepository.digitalCategories
     val fashionCategories = ProductRepository.fashionCategories
@@ -32,18 +31,44 @@ class CategoryViewModel(application: Application) : AndroidViewModel(application
     val superMarketCategories = ProductRepository.superMarketCategories
     val otherCategories = ProductRepository.otherCategories
 
+
+
     fun checkNetwork(lifecycleOwner: LifecycleOwner) {
         this.lifecycleOwner = lifecycleOwner
         networkConnectivity.observe(
             lifecycleOwner,
-            Observer { isConnected ->
-                if (isConnected)
+            Observer {
+                showDisconnected(it)
+                showLoading(it)
+                if (it)
                     fetchCategories()
+
             }
         )
     }
 
-    fun isDataFetched(): LiveData<Boolean> = ProductRepository.isCategoriesDataFetched
+    private fun showDisconnected(isConnected: Boolean) {
+        if (isConnected)
+            ProductRepository.showDisconnect.postValue(false)
+        else{
+            ProductRepository.isCategoriesDataFetched.observe(owner = lifecycleOwner, onChanged = {
+                ProductRepository.showDisconnect.postValue(!it)
+            })
+        }
+    }
+
+    private fun showLoading(isConnected: Boolean){
+        isDataFetched.observe(owner = lifecycleOwner, onChanged = { itOuter ->
+            if (itOuter)
+                showLoading.postValue(false)
+            else {
+                if (isConnected)
+                    showLoading.postValue(true)
+                else
+                    showLoading.postValue(false)
+            }
+        })
+    }
 
     private fun fetchCategories() {
 
@@ -54,8 +79,9 @@ class CategoryViewModel(application: Application) : AndroidViewModel(application
             val superMarket = async { fetchSuperMarket() }
             val other = async {  fetchOtherCategories() }
 
-            if (digital.await() && fashion.await() && artBook.await() && superMarket.await() && other.await())
+            if (digital.await() && fashion.await() && artBook.await() && superMarket.await() && other.await()) {
                 ProductRepository.isCategoriesDataFetched.postValue(true)
+            }
         }
     }
 

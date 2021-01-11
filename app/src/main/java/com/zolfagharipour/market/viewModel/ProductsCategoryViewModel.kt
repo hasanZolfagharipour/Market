@@ -24,6 +24,9 @@ class ProductsCategoryViewModel(application: Application) : AndroidViewModel(app
     private lateinit var lifecycleOwner: LifecycleOwner
     var isDataFetched: MutableLiveData<Boolean> = MutableLiveData(false)
 
+    var showLoading: MutableLiveData<Boolean> = MutableLiveData(true)
+    var showDisconnected: MutableLiveData<Boolean> = MutableLiveData(false)
+
     fun searchTitle(): String = "جستجو در ${category.name}"
 
     fun checkNetwork(lifecycleOwner: LifecycleOwner) {
@@ -31,10 +34,39 @@ class ProductsCategoryViewModel(application: Application) : AndroidViewModel(app
         networkConnectivity.observe(
             lifecycleOwner,
             Observer { isConnected ->
+                showLoading(isConnected)
+                showDisconnected(isConnected)
                 if (isConnected)
                     viewModelScope.launch(IO) { fetchItems() }
             }
         )
+    }
+
+    private fun showLoading(isConnected: Boolean){
+        isDataFetched.observe(owner = lifecycleOwner, onChanged = { itOuter ->
+            if (itOuter)
+                showLoading.postValue(false)
+            else {
+                if (isConnected)
+                    showLoading.postValue(true)
+                else
+                    showLoading.postValue(false)
+            }
+        })
+    }
+
+    private fun showDisconnected(isConnected: Boolean) {
+        if (isConnected)
+            showDisconnected.postValue(false)
+        else{
+            isDataFetched.observe(owner = lifecycleOwner, onChanged = {
+                if (it)
+                    showDisconnected.postValue(false)
+                else
+                    showDisconnected.postValue(true)
+            })
+        }
+
     }
 
     private suspend fun fetchItems() {
