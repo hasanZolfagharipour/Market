@@ -11,6 +11,7 @@ import com.zolfagharipour.market.network.NetworkParams
 import com.zolfagharipour.market.network.RetrofitBuilder
 import com.zolfagharipour.market.network.deserializer.CategoriesDeserializer
 import com.zolfagharipour.market.network.deserializer.CategoryDeserializer
+import com.zolfagharipour.market.other.Utilities
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -32,7 +33,6 @@ class CategoryViewModel(application: Application) : AndroidViewModel(application
     val otherCategories = ProductRepository.otherCategories
 
 
-
     fun checkNetwork(lifecycleOwner: LifecycleOwner) {
         this.lifecycleOwner = lifecycleOwner
         networkConnectivity.observe(
@@ -50,14 +50,14 @@ class CategoryViewModel(application: Application) : AndroidViewModel(application
     private fun showDisconnected(isConnected: Boolean) {
         if (isConnected)
             ProductRepository.showDisconnect.postValue(false)
-        else{
+        else {
             ProductRepository.isCategoriesDataFetched.observe(owner = lifecycleOwner, onChanged = {
                 ProductRepository.showDisconnect.postValue(!it)
             })
         }
     }
 
-    private fun showLoading(isConnected: Boolean){
+    private fun showLoading(isConnected: Boolean) {
         isDataFetched.observe(owner = lifecycleOwner, onChanged = { itOuter ->
             if (itOuter)
                 showLoading.postValue(false)
@@ -72,12 +72,12 @@ class CategoryViewModel(application: Application) : AndroidViewModel(application
 
     private fun fetchCategories() {
 
-        viewModelScope.launch(IO){
+        viewModelScope.launch(IO + Utilities.exceptionHandler) {
             val digital = async { fetchDigitalCategories() }
             val fashion = async { fetchFashionCategories() }
             val artBook = async { fetchArtAndBookCategories() }
             val superMarket = async { fetchSuperMarket() }
-            val other = async {  fetchOtherCategories() }
+            val other = async { fetchOtherCategories() }
 
             if (digital.await() && fashion.await() && artBook.await() && superMarket.await() && other.await()) {
                 ProductRepository.isCategoriesDataFetched.postValue(true)
@@ -85,11 +85,12 @@ class CategoryViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    private suspend fun fetchDigitalCategories(): Boolean{
+    private suspend fun fetchDigitalCategories(): Boolean {
 
         val typeToken = object : TypeToken<ArrayList<CategoryModel>>() {}.type
         val typeAdapter = CategoriesDeserializer()
-        val api = RetrofitBuilder.getInstance(typeToken, typeAdapter).create(ApiRequestService::class.java)
+        val api = RetrofitBuilder.getInstance(typeToken, typeAdapter)
+            .create(ApiRequestService::class.java)
 
         val digitalResponse = api.categories(NetworkParams.QUERY_OPTIONS_DIGITAL_CATEGORY)
         if (!digitalResponse.isSuccessful) return false
@@ -99,10 +100,11 @@ class CategoryViewModel(application: Application) : AndroidViewModel(application
 
     }
 
-    private suspend fun fetchFashionCategories(): Boolean{
+    private suspend fun fetchFashionCategories(): Boolean {
         val typeToken = object : TypeToken<ArrayList<CategoryModel>>() {}.type
         val typeAdapter = CategoriesDeserializer()
-        val api = RetrofitBuilder.getInstance(typeToken, typeAdapter).create(ApiRequestService::class.java)
+        val api = RetrofitBuilder.getInstance(typeToken, typeAdapter)
+            .create(ApiRequestService::class.java)
 
         val fashionResponse = api.categories(NetworkParams.QUERY_OPTIONS_FASHION_AND_MODEL_CATEGORY)
         if (!fashionResponse.isSuccessful) return false
@@ -114,7 +116,8 @@ class CategoryViewModel(application: Application) : AndroidViewModel(application
     private suspend fun fetchArtAndBookCategories(): Boolean {
         val typeToken = object : TypeToken<ArrayList<CategoryModel>>() {}.type
         val typeAdapter = CategoriesDeserializer()
-        val api = RetrofitBuilder.getInstance(typeToken, typeAdapter).create(ApiRequestService::class.java)
+        val api = RetrofitBuilder.getInstance(typeToken, typeAdapter)
+            .create(ApiRequestService::class.java)
 
         val artAndBookResponse = api.categories(NetworkParams.QUERY_OPTIONS_ART_AND_BOOK_CATEGORY)
         if (!artAndBookResponse.isSuccessful) return false
@@ -123,10 +126,11 @@ class CategoryViewModel(application: Application) : AndroidViewModel(application
         return true
     }
 
-    private suspend fun fetchSuperMarket(): Boolean{
+    private suspend fun fetchSuperMarket(): Boolean {
         val typeToken = object : TypeToken<ArrayList<CategoryModel>>() {}.type
         val typeAdapter = CategoriesDeserializer()
-        val api = RetrofitBuilder.getInstance(typeToken, typeAdapter).create(ApiRequestService::class.java)
+        val api = RetrofitBuilder.getInstance(typeToken, typeAdapter)
+            .create(ApiRequestService::class.java)
 
 
         val superMarketResponse = api.categories(NetworkParams.QUERY_OPTIONS_SUPER_MARKET_CATEGORY)
@@ -136,13 +140,20 @@ class CategoryViewModel(application: Application) : AndroidViewModel(application
         return true
     }
 
-    private suspend fun fetchOtherCategories(): Boolean{
+    private suspend fun fetchOtherCategories(): Boolean {
         val typeTokenCategory = object : TypeToken<CategoryModel>() {}.type
         val typeAdapterCategory = CategoryDeserializer()
-        val apiCategory = RetrofitBuilder.getInstance(typeTokenCategory, typeAdapterCategory).create(ApiRequestService::class.java)
+        val apiCategory = RetrofitBuilder.getInstance(typeTokenCategory, typeAdapterCategory)
+            .create(ApiRequestService::class.java)
 
-        val healthyResponse = apiCategory.category(NetworkParams.CategoryID.HEALTHY_ID, NetworkParams.QUERY_OPTIONS_BASIC)
-        val specialSaleResponse = apiCategory.category(NetworkParams.CategoryID.SPECIAL_ID, NetworkParams.QUERY_OPTIONS_BASIC)
+        val healthyResponse = apiCategory.category(
+            NetworkParams.CategoryID.HEALTHY_ID,
+            NetworkParams.QUERY_OPTIONS_BASIC
+        )
+        val specialSaleResponse = apiCategory.category(
+            NetworkParams.CategoryID.SPECIAL_ID,
+            NetworkParams.QUERY_OPTIONS_BASIC
+        )
 
         if (!healthyResponse.isSuccessful || !specialSaleResponse.isSuccessful) return false
 

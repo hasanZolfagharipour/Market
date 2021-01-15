@@ -4,9 +4,9 @@ import androidx.lifecycle.MutableLiveData
 
 object ProductRepository {
 
-    lateinit var lastProductModels: ArrayList<ProductModel>
-    lateinit var popularProductModels: ArrayList<ProductModel>
-    lateinit var mostRatingProductModels: ArrayList<ProductModel>
+    lateinit var lastProducts: ArrayList<ProductModel>
+    lateinit var popularProducts: ArrayList<ProductModel>
+    lateinit var bestProducts: ArrayList<ProductModel>
     lateinit var categoryModelSuggestion: ArrayList<CategoryModel>
 
     val digitalCategories = MutableLiveData<ArrayList<CategoryModel>>()

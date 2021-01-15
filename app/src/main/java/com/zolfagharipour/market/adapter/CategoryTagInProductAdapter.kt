@@ -12,18 +12,28 @@ import com.zolfagharipour.market.data.room.entities.CategoryModel
 import com.zolfagharipour.market.databinding.ItemRowCategoriesInProductBinding
 import com.zolfagharipour.market.view.fragment.DetailFragmentDirections
 
-class CategoryTagInProductAdapter(val viewModel: AndroidViewModel, val lifecycleOwner: LifecycleOwner,private val list: ArrayList<CategoryModel>,val navController: NavController):
+class CategoryTagInProductAdapter(
+    val viewModel: AndroidViewModel,
+    val lifecycleOwner: LifecycleOwner,
+    private val list: ArrayList<CategoryModel>,
+    val navController: NavController
+) :
     RecyclerView.Adapter<CategoryTagInProductAdapter.CategoryTagInProductViewHolder>() {
 
-    inner class CategoryTagInProductViewHolder(val binding: ItemRowCategoriesInProductBinding): RecyclerView.ViewHolder(binding.root){
+    inner class CategoryTagInProductViewHolder(val binding: ItemRowCategoriesInProductBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         init {
             binding.lifecycleOwner = lifecycleOwner
         }
 
-        fun bindCategories(categoryModel: CategoryModel){
+        fun bindCategories(categoryModel: CategoryModel) {
             binding.category = categoryModel
-            binding.root.setOnClickListener{
-                navController.navigate(DetailFragmentDirections.actionDetailFragmentToProductsCategoryFragment(categoryModel))
+            binding.root.setOnClickListener {
+                navController.navigate(
+                    DetailFragmentDirections.actionDetailFragmentToProductsCategoryFragment(
+                        categoryModel
+                    )
+                )
             }
             binding.executePendingBindings()
         }
@@ -33,7 +43,14 @@ class CategoryTagInProductAdapter(val viewModel: AndroidViewModel, val lifecycle
         parent: ViewGroup,
         viewType: Int
     ): CategoryTagInProductViewHolder {
-        return CategoryTagInProductViewHolder(DataBindingUtil.inflate(LayoutInflater.from(viewModel.getApplication()), R.layout.item_row_categories_in_product, parent, false))
+        return CategoryTagInProductViewHolder(
+            DataBindingUtil.inflate(
+                LayoutInflater.from(viewModel.getApplication()),
+                R.layout.item_row_categories_in_product,
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: CategoryTagInProductViewHolder, position: Int) {

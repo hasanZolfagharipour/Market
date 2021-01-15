@@ -16,6 +16,7 @@ import com.zolfagharipour.market.R
 import com.zolfagharipour.market.adapter.CategoryAdapter
 import com.zolfagharipour.market.data.room.entities.CategoryModel
 import com.zolfagharipour.market.databinding.FragmentCategoryBinding
+import com.zolfagharipour.market.other.Utilities
 import com.zolfagharipour.market.viewModel.CategoryViewModel
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
@@ -47,12 +48,27 @@ class CategoryFragment : Fragment() {
     private fun fetchDataOnObserver(){
         viewModel.isDataFetched.observe(viewLifecycleOwner, {
             if (it) {
-                lifecycleScope.launch(Main) {
-                    setRecyclerViews(binding.recyclerViewDigitalCategory, viewModel.digitalCategories.value!!)
-                    setRecyclerViews(binding.recyclerViewFashionAndModelCategory, viewModel.fashionCategories.value!!)
-                    setRecyclerViews(binding.recyclerViewArtAndBookCategory, viewModel.artAndBookCategories.value!!)
-                    setRecyclerViews(binding.recyclerViewSuperMarketCategory, viewModel.superMarketCategories.value!!)
-                    setRecyclerViews(binding.recyclerViewOtherCategory, viewModel.otherCategories.value!!)
+                lifecycleScope.launch(Main + Utilities.exceptionHandler) {
+                    setRecyclerViews(
+                        binding.recyclerViewDigitalCategory,
+                        viewModel.digitalCategories.value!!
+                    )
+                    setRecyclerViews(
+                        binding.recyclerViewFashionAndModelCategory,
+                        viewModel.fashionCategories.value!!
+                    )
+                    setRecyclerViews(
+                        binding.recyclerViewArtAndBookCategory,
+                        viewModel.artAndBookCategories.value!!
+                    )
+                    setRecyclerViews(
+                        binding.recyclerViewSuperMarketCategory,
+                        viewModel.superMarketCategories.value!!
+                    )
+                    setRecyclerViews(
+                        binding.recyclerViewOtherCategory,
+                        viewModel.otherCategories.value!!
+                    )
                 }
             }
         })

@@ -26,5 +26,7 @@
     <string name="art_and_book">کتاب و هنر</string>
     <string name="super_market">سوپر مارکت</string>
     <string name="other">دیگر</string>
+    <string name="see_all_products">مشاهده همه</string>
+    <string name="all_products">همه محصولات</string>
 
 </resources>

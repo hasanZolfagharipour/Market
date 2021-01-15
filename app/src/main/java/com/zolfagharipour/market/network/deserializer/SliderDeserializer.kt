@@ -6,7 +6,7 @@ import com.google.gson.JsonElement
 import com.zolfagharipour.market.data.room.entities.SliderModel
 import java.lang.reflect.Type
 
-class SliderDeserializer: JsonDeserializer<SliderModel> {
+class SliderDeserializer : JsonDeserializer<SliderModel> {
     override fun deserialize(
         json: JsonElement?,
         typeOfT: Type?,

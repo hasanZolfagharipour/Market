@@ -1,7 +1,6 @@
 package com.zolfagharipour.market.view.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,12 +16,13 @@ import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import com.zolfagharipour.market.R
 import com.zolfagharipour.market.adapter.CategorySuggestionAdapter
+import com.zolfagharipour.market.adapter.HomeProductsAdapter
 import com.zolfagharipour.market.adapter.HomeSlideAdapter
-import com.zolfagharipour.market.adapter.ProductsAdapter
+import com.zolfagharipour.market.data.room.entities.CategoryModel
 import com.zolfagharipour.market.data.room.entities.ProductModel
 import com.zolfagharipour.market.databinding.FragmentHomeBinding
-import com.zolfagharipour.market.enums.FragmentHostEnum
-import com.zolfagharipour.market.other.TAG
+import com.zolfagharipour.market.network.NetworkParams
+import com.zolfagharipour.market.other.Utilities
 import com.zolfagharipour.market.viewModel.HomeViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.Default
@@ -40,7 +40,11 @@ class HomeFragment : Fragment() {
         viewModel = ViewModelProvider(requireActivity()).get(HomeViewModel::class.java)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         return binding.root
     }
@@ -49,12 +53,27 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.viewModel = viewModel
 
-        lifecycleScope.launch(Main){
+        lifecycleScope.launch(Main + Utilities.exceptionHandler) {
             setSlider()
             setCategorySuggestionRecyclerView()
-            setRecyclerViews(binding.recyclerViewLastProducts, viewModel.lastProducts.value!!)
-            setRecyclerViews(binding.recyclerViewPopularProducts, viewModel.popularProducts.value!!)
-            setRecyclerViews(binding.recyclerViewMostRatingProducts, viewModel.mostRatingProductModel.value!!)
+            setRecyclerViews(
+                binding.recyclerViewLastProducts,
+                viewModel.lastProducts.value!!,
+                R.drawable.last_label,
+                CategoryModel(NetworkParams.CategoryID.LAST_PRODUCTS_ID, getString(R.string.all_products))
+            )
+            setRecyclerViews(
+                binding.recyclerViewPopularProducts,
+                viewModel.popularProducts.value!!,
+                R.drawable.popular_label,
+                CategoryModel(NetworkParams.CategoryID.POPULAR_PRODUCTS_ID, getString(R.string.all_products))
+            )
+            setRecyclerViews(
+                binding.recyclerViewMostRatingProducts,
+                viewModel.bestProducts.value!!,
+                R.drawable.best_label,
+                CategoryModel(NetworkParams.CategoryID.BEST_PRODUCTS_ID, getString(R.string.all_products))
+            )
         }
 
         setListener()
@@ -77,19 +96,25 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun setRecyclerViews(recyclerView: RecyclerView, list: ArrayList<ProductModel>) {
+    private fun setRecyclerViews(
+        recyclerView: RecyclerView,
+        list: ArrayList<ProductModel>,
+        drawable: Int,
+        category: CategoryModel
+    ) {
         recyclerView.apply {
             layoutManager = LinearLayoutManager(
                 requireActivity(),
                 LinearLayoutManager.HORIZONTAL,
                 false
             )
-            adapter = ProductsAdapter(
+            adapter = HomeProductsAdapter(
                 viewModel,
                 this@HomeFragment,
                 list,
                 findNavController(),
-                FragmentHostEnum.HOME
+                drawable,
+                category
             )
         }
     }
@@ -115,7 +140,7 @@ class HomeFragment : Fragment() {
                 super.onPageSelected(position)
 
                 autoSliderJob?.cancel()
-                autoSliderJob = lifecycleScope.launch(Default) {
+                autoSliderJob = lifecycleScope.launch(Default + Utilities.exceptionHandler) {
                     delay(3000)
                     binding.viewPagerSlider.currentItem = viewModel.getSliderNextPosition(position)
                 }

@@ -14,9 +14,8 @@ import com.zolfagharipour.market.network.RetrofitBuilder
 import com.zolfagharipour.market.network.deserializer.CategoriesDeserializer
 import com.zolfagharipour.market.network.deserializer.ProductsDeserializer
 import com.zolfagharipour.market.network.deserializer.SliderDeserializer
-import kotlinx.coroutines.Dispatchers
+import com.zolfagharipour.market.other.Utilities
 import kotlinx.coroutines.Dispatchers.Default
-import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
@@ -32,24 +31,25 @@ class SplashViewModel(application: Application) : AndroidViewModel(application) 
     fun checkNetwork(lifecycleOwner: LifecycleOwner) {
         this.lifecycleOwner = lifecycleOwner
         networkConnectivity.observe(lifecycleOwner, Observer { isConnected ->
-                isConnect.value = isConnected
-                if (isConnected)
-                    fetchInitialProducts()
-            })
+            isConnect.value = isConnected
+            if (isConnected)
+                fetchInitialProducts()
+        })
     }
 
     private fun fetchInitialProducts() {
-        viewModelScope.launch(Default) {
+        viewModelScope.launch(Default + Utilities.exceptionHandler) {
             val slider = async { fetchSliderItems() }
             val suggestion = async { fetchSuggestionCategory() }
             val last = async { fetchLastProduct() }
             val popular = async { fetchPopularProduct() }
-            val most = async { fetchMostRating() }
+            val most = async { fetchBestProducts() }
 
             if (slider.await() && suggestion.await() && last.await() && popular.await() && most.await())
                 isDataFetched.postValue(true)
         }
     }
+
 
     private suspend fun fetchSliderItems(): Boolean {
 
@@ -57,6 +57,7 @@ class SplashViewModel(application: Application) : AndroidViewModel(application) 
         val typeAdapterSlider = SliderDeserializer()
         val sliderApi = RetrofitBuilder.getInstance(typeTokenSlider, typeAdapterSlider)
             .create(ApiRequestService::class.java)
+
         val sliderResponse = sliderApi.sliderItems(
             NetworkParams.CategoryID.SLIDER_ID,
             NetworkParams.QUERY_OPTIONS_BASIC
@@ -88,10 +89,10 @@ class SplashViewModel(application: Application) : AndroidViewModel(application) 
         val productApi = RetrofitBuilder.getInstance(typeTokenProduct, typeAdapterProduct)
             .create(ApiRequestService::class.java)
 
-        val lastResponse = productApi.products(NetworkParams.QUERY_OPTIONS_BASIC)
+        val lastResponse = productApi.products(NetworkParams.queryOptionsProductsByOrder(NetworkParams.ORDER_BY_DATE, NetworkParams.NUMBER_OF_PER_PAGE_PRODUCTS_IN_HOME_TAB))
         if (!lastResponse.isSuccessful) return false
 
-        ProductRepository.lastProductModels = lastResponse.body()!!
+        ProductRepository.lastProducts = lastResponse.body()!!
         return true
     }
 
@@ -102,24 +103,24 @@ class SplashViewModel(application: Application) : AndroidViewModel(application) 
         val productApi = RetrofitBuilder.getInstance(typeTokenProduct, typeAdapterProduct)
             .create(ApiRequestService::class.java)
 
-        val popularResponse = productApi.products(NetworkParams.QUERY_OPTIONS_POPULAR_PRODUCTS)
+        val popularResponse = productApi.products(NetworkParams.queryOptionsProductsByOrder(NetworkParams.ORDER_BY_POPULAR, NetworkParams.NUMBER_OF_PER_PAGE_PRODUCTS_IN_HOME_TAB))
         if (!popularResponse.isSuccessful) return false
 
-        ProductRepository.popularProductModels = popularResponse.body()!!
+        ProductRepository.popularProducts = popularResponse.body()!!
         return true
     }
 
-    private suspend fun fetchMostRating(): Boolean {
+    private suspend fun fetchBestProducts(): Boolean {
         val typeTokenProduct = object : TypeToken<ArrayList<ProductModel>>() {}.type
         val typeAdapterProduct = ProductsDeserializer()
         val productApi = RetrofitBuilder.getInstance(typeTokenProduct, typeAdapterProduct)
             .create(ApiRequestService::class.java)
 
         val mostRatingResponse =
-            productApi.products(NetworkParams.QUERY_OPTIONS_MOST_RATING_PRODUCTS)
+            productApi.products(NetworkParams.queryOptionsProductsByOrder(NetworkParams.ORDER_BY_RATE, NetworkParams.NUMBER_OF_PER_PAGE_PRODUCTS_IN_HOME_TAB))
         if (!mostRatingResponse.isSuccessful) return false
 
-        ProductRepository.mostRatingProductModels = mostRatingResponse.body()!!
+        ProductRepository.bestProducts = mostRatingResponse.body()!!
         return true
     }
 }

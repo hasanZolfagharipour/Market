@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.zolfagharipour.market.R
 import com.zolfagharipour.market.databinding.FragmentSplashBinding
+import com.zolfagharipour.market.other.Utilities
 import com.zolfagharipour.market.viewModel.SplashViewModel
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.delay
@@ -55,11 +56,11 @@ class SplashFragment : Fragment() {
 
     private fun navigateToHomeFragment(isConnect: Boolean) {
         if (isConnect)
-                findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToHomeFragment())
+            findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToHomeFragment())
     }
 
     private fun setAnimation() {
-        lifecycleScope.launch(Main) {
+        lifecycleScope.launch(Main + Utilities.exceptionHandler) {
             delay(500)
             val animation = AnimationUtils.loadAnimation(activity, android.R.anim.fade_in)
             animation.duration = 1000
@@ -74,7 +75,7 @@ class SplashFragment : Fragment() {
 
     private fun logoAnimation() {
 
-        binding.lottieAnimationLogo.addAnimatorListener(object: Animator.AnimatorListener{
+        binding.lottieAnimationLogo.addAnimatorListener(object : Animator.AnimatorListener {
             override fun onAnimationStart(animation: Animator?) {
 
             }

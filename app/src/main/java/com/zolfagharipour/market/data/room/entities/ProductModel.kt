@@ -2,10 +2,9 @@ package com.zolfagharipour.market.data.room.entities
 
 import android.text.Html
 import android.text.SpannableString
-import android.util.Log
-import com.zolfagharipour.market.other.TAG
 import com.zolfagharipour.market.other.Utilities
 import java.io.Serializable
+import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
 
@@ -21,11 +20,11 @@ data class ProductModel(
     val categories: ArrayList<CategoryModel> = ArrayList(),
     val rate: String = "",
     var relatedProductModel: ArrayList<ProductModel> = ArrayList()
-): Serializable {
+) : Serializable {
 
 
     fun currentPriceFormatted(): String {
-        val text = Utilities.separator(currentPrice)
+        val text = separator(currentPrice)
         return "$text تومان"
     }
 
@@ -33,7 +32,7 @@ data class ProductModel(
         return if (currentPrice == regularPrice)
             SpannableString("")
         else
-            Utilities.getSpannedText(Utilities.separator(regularPrice))
+            Utilities.getSpannedText(separator(regularPrice))
     }
 
     fun discountPercentFormatted(): String {
@@ -46,7 +45,7 @@ data class ProductModel(
         else " $value% "
     }
 
-    fun descriptionFormatted(): String{
+    fun descriptionFormatted(): String {
         return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             Html.fromHtml(description, Html.FROM_HTML_MODE_LEGACY).toString()
         } else {
@@ -56,14 +55,18 @@ data class ProductModel(
 
     fun rateFormatted(): Int = (rate.toDouble() * 2).roundToInt()
 
-    fun totalSaleFormatted():String = "($totalSale)"
+    fun totalSaleFormatted(): String = "($totalSale)"
 
     fun rateFormattedString(): String {
-        val rateInt =  rate.toDouble().roundToInt()
+        val rateInt = rate.toDouble().roundToInt()
         if (rateInt == 0)
             return "0"
         else
             return rate.toDouble().toString()
+    }
+
+    private fun separator(price: String): String {
+        return DecimalFormat("0,000").format(price.toInt())
     }
 
 }

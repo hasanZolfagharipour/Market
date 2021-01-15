@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.lifecycle.*
 import com.google.gson.reflect.TypeToken
 import com.zolfagharipour.market.data.room.entities.ProductModel
-import com.zolfagharipour.market.data.room.entities.ProductRepository
 import com.zolfagharipour.market.network.ApiRequestService
 import com.zolfagharipour.market.network.CheckNetworkConnectivity
 import com.zolfagharipour.market.network.NetworkParams
@@ -12,6 +11,7 @@ import com.zolfagharipour.market.network.RetrofitBuilder
 import com.zolfagharipour.market.network.deserializer.ProductDetailDeserializer
 import com.zolfagharipour.market.network.deserializer.ProductSummaryItemRowDeserializer
 import com.zolfagharipour.market.network.deserializer.RelatedIdDeserializer
+import com.zolfagharipour.market.other.Utilities
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 
@@ -71,7 +71,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     private fun fetchItems(product: ProductModel) {
-        viewModelScope.launch(IO) {
+        viewModelScope.launch(IO + Utilities.exceptionHandler) {
             async {
                 if (!isDataFetched.value!!)
                 fetchProductDetail(product) }
@@ -128,7 +128,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             apiSimilarProduct = RetrofitBuilder.getInstance(typeToken, ProductSummaryItemRowDeserializer()).create(ApiRequestService::class.java)
 
             val deferred = ArrayList<Deferred<ProductModel?>>()
-            viewModelScope.launch(IO) {
+            viewModelScope.launch(IO + Utilities.exceptionHandler) {
             for (i in 0 until tempProduct!!.relatedIds.size) {
                 async { fetchSimilarItem(tempProduct.relatedIds[i]) }.let {
                     deferred.add(it)

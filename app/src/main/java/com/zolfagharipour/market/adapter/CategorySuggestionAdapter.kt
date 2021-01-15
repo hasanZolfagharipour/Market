@@ -40,9 +40,15 @@ class CategorySuggestionAdapter(
             )
             binding.circleImageViewItemRowSuggestionCategoryPhoto.circleBackgroundColor =
                 Color.parseColor(ProductRepository.colorCategorySuggestions[position])
-            binding.cardViewContainerCircleImageView.setCardBackgroundColor(Color.parseColor(ProductRepository.colorCategorySuggestions[position]))
-            binding.root.setOnClickListener{
-                val action = HomeFragmentDirections.actionHomeFragmentToProductsCategoryFragment(categoryModel)
+            binding.cardViewContainerCircleImageView.setCardBackgroundColor(
+                Color.parseColor(
+                    ProductRepository.colorCategorySuggestions[position]
+                )
+            )
+            binding.root.setOnClickListener {
+                val action = HomeFragmentDirections.actionHomeFragmentToProductsCategoryFragment(
+                    categoryModel
+                )
                 navController.navigate(action)
             }
             binding.executePendingBindings()

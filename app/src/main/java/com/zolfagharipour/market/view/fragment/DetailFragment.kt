@@ -1,7 +1,6 @@
 package com.zolfagharipour.market.view.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,17 +10,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.zolfagharipour.market.R
 import com.zolfagharipour.market.adapter.CategoryTagInProductAdapter
+import com.zolfagharipour.market.adapter.HomeProductsAdapter
 import com.zolfagharipour.market.adapter.PhotoSliderAdapter
-import com.zolfagharipour.market.adapter.ProductsAdapter
+import com.zolfagharipour.market.adapter.ProductsInDetailAdapter
 import com.zolfagharipour.market.data.room.entities.ProductModel
 import com.zolfagharipour.market.databinding.FragmentDetailBinding
-import com.zolfagharipour.market.enums.FragmentHostEnum
-import com.zolfagharipour.market.other.TAG
+import com.zolfagharipour.market.other.Utilities
 import com.zolfagharipour.market.viewModel.DetailViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 
@@ -49,7 +48,7 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.viewModel = viewModel
-        lifecycleScope.launch {
+        lifecycleScope.launch(Main + Utilities.exceptionHandler) {
             viewModel.product.observe(viewLifecycleOwner, {
                 setSlider(it)
                 setCategoryTagRecyclerView(it)
@@ -86,24 +85,31 @@ class DetailFragment : Fragment() {
                 false
             )
             adapter =
-                CategoryTagInProductAdapter(viewModel, this@DetailFragment, productModel.categories, findNavController())
+                CategoryTagInProductAdapter(
+                    viewModel,
+                    this@DetailFragment,
+                    productModel.categories,
+                    findNavController()
+                )
         }
     }
 
-    private fun setSimilarProductRecyclerView(productModel: ProductModel) {
+    private fun setSimilarProductRecyclerView(product: ProductModel) {
         binding.recyclerViewSimilarProduct.apply {
             layoutManager = LinearLayoutManager(
                 viewModel.getApplication(),
                 LinearLayoutManager.HORIZONTAL,
                 false
             )
-            adapter = ProductsAdapter(
+            adapter = ProductsInDetailAdapter(
                 viewModel,
                 this@DetailFragment,
-                productModel.relatedProductModel,
+                product.relatedProductModel,
                 findNavController(),
-                FragmentHostEnum.DETAIL
-            )
+
+                )
+
+            addItemDecoration(DividerItemDecoration(viewModel.getApplication(), LinearLayoutManager.HORIZONTAL))
         }
     }
 }
