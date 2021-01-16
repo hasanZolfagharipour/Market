@@ -1,6 +1,7 @@
 package com.zolfagharipour.market.viewModel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.*
 import com.google.gson.reflect.TypeToken
 import com.zolfagharipour.market.data.room.entities.CategoryModel
@@ -10,6 +11,7 @@ import com.zolfagharipour.market.network.CheckNetworkConnectivity
 import com.zolfagharipour.market.network.NetworkParams
 import com.zolfagharipour.market.network.RetrofitBuilder
 import com.zolfagharipour.market.network.deserializer.ProductsDeserializer
+import com.zolfagharipour.market.other.TAG
 import com.zolfagharipour.market.other.Utilities
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -126,7 +128,7 @@ class ProductsCategoryViewModel(application: Application) : AndroidViewModel(app
                 viewModelScope.launch(IO + Utilities.exceptionHandler) {
                     val categoryResponse = apiService.products(queryOptions(page))
                     if (categoryResponse.isSuccessful) {
-                        if (categoryResponse.body()?.size == 0)
+                        if (categoryResponse.body()?.size == 0 )
                             isAllDataFetched = true
                         category.products.addAll(categoryResponse.body()!!)
                         isLoadingMore.postValue(false)

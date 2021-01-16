@@ -37,7 +37,6 @@ class ProductsCategoryFragment : Fragment() {
         adapter = ProductsInCategoryAdapter(
             viewModel,
             this@ProductsCategoryFragment,
-            viewModel.category.products,
             findNavController()
         )
     }
@@ -56,9 +55,21 @@ class ProductsCategoryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setObservers()
+        setRecyclerView()
+        setListener()
+
+
+    }
+
+    private fun setObservers(){
         viewModel.isDataFetched.observe(viewLifecycleOwner, {
             if (it)
-                lifecycleScope.launch(Main + Utilities.exceptionHandler) { setRecyclerView() }
+                lifecycleScope.launch(Main + Utilities.exceptionHandler) {
+                    adapter.submitList(viewModel.category.products)
+                    adapter.notifyDataSetChanged()
+                }
         })
 
         viewModel.isLoadingMore.observe(viewLifecycleOwner, {
@@ -75,7 +86,6 @@ class ProductsCategoryFragment : Fragment() {
             adapter = this@ProductsCategoryFragment.adapter
             addItemDecoration(DividerItemDecoration(this.context, LinearLayoutManager.VERTICAL))
         }
-        setListener()
     }
 
     private fun setListener() {

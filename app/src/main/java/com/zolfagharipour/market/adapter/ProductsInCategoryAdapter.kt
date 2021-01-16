@@ -5,6 +5,8 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.zolfagharipour.market.R
@@ -18,10 +20,9 @@ import com.zolfagharipour.market.viewModel.ProductsCategoryViewModel
 class ProductsInCategoryAdapter(
     val viewModel: ProductsCategoryViewModel,
     val lifecycleOwner: LifecycleOwner,
-    private val list: ArrayList<ProductModel>,
     val navController: NavController
 ) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    ListAdapter<ProductModel, RecyclerView.ViewHolder>(DiffCallback()) {
 
     private val loadingType = 1
     private val errorType = 2
@@ -95,9 +96,9 @@ class ProductsInCategoryAdapter(
 
     override fun getItemViewType(position: Int): Int {
 
-        return if (viewModel.isConnected && position == list.size - 1 && !viewModel.isAllDataFetched)
+        return if (viewModel.isConnected && position == currentList.size - 1 && !viewModel.isAllDataFetched)
             loadingType
-        else if (!viewModel.isConnected && position == list.size - 1)
+        else if (!viewModel.isConnected && position == currentList.size - 1)
             errorType
         else
             itemType
@@ -105,8 +106,15 @@ class ProductsInCategoryAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ProductsInCategoryHolder)
-            holder.bindingItems(list[position])
+            holder.bindingItems(getItem(position))
     }
 
-    override fun getItemCount(): Int = list.size
+    class DiffCallback: DiffUtil.ItemCallback<ProductModel>(){
+        override fun areItemsTheSame(oldItem: ProductModel, newItem: ProductModel): Boolean = oldItem.id == newItem.id
+
+        override fun areContentsTheSame(oldItem: ProductModel, newItem: ProductModel): Boolean = oldItem == newItem
+
+    }
+
+
 }
