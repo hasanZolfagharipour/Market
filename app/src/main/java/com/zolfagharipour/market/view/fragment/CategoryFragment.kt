@@ -8,7 +8,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -32,7 +31,11 @@ class CategoryFragment : Fragment() {
         viewModel.checkNetwork(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_category, container, false)
         return binding.root
     }
@@ -45,7 +48,7 @@ class CategoryFragment : Fragment() {
         setListener()
     }
 
-    private fun fetchDataOnObserver(){
+    private fun fetchDataOnObserver() {
         viewModel.isDataFetched.observe(viewLifecycleOwner, {
             if (it) {
                 lifecycleScope.launch(Main + Utilities.exceptionHandler) {
@@ -75,19 +78,20 @@ class CategoryFragment : Fragment() {
     }
 
     private fun setRecyclerViews(recyclerView: RecyclerView, list: ArrayList<CategoryModel>) {
+        val adapter = CategoryAdapter(
+            viewModel,
+            this@CategoryFragment,
+            findNavController()
+        )
+        adapter.submitList(list)
         recyclerView.apply {
             layoutManager =
                 LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
-            adapter = CategoryAdapter(
-                viewModel,
-                this@CategoryFragment,
-               list,
-                findNavController()
-            )
+            this.adapter = adapter
         }
     }
 
-    private fun setListener(){
+    private fun setListener() {
         binding.searchViewBox.cardViewContainerSearchViewHome.setOnClickListener {
             val action = CategoryFragmentDirections.actionCategoryFragmentToSearchFragment()
             findNavController().navigate(action)

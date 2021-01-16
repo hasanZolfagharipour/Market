@@ -6,6 +6,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.zolfagharipour.market.R
@@ -19,12 +21,11 @@ import com.zolfagharipour.market.view.fragment.HomeFragmentDirections
 class HomeProductsAdapter(
     private val viewModel: AndroidViewModel,
     val lifecycleOwner: LifecycleOwner,
-    private val list: ArrayList<ProductModel>,
     val navController: NavController,
     val drawable: Int,
     val category: CategoryModel
 ) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    ListAdapter<ProductModel, RecyclerView.ViewHolder>(DiffUtilCallbackHomeProducts()) {
 
     private val itemLabelType = 0
     private val itemRowType = 1
@@ -61,7 +62,7 @@ class HomeProductsAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is ProductsHolder -> holder.bindProducts(list[position])
+            is ProductsHolder -> holder.bindProducts(getItem(position))
             is LabelHolder -> holder.bindLabelImage()
             is EndViewHolder -> holder.navigating()
         }
@@ -75,11 +76,9 @@ class HomeProductsAdapter(
         }
     }
 
-
     override fun getItemCount(): Int = 12
 
-    inner class ProductsHolder(var binding: ItemRowProductsBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    inner class ProductsHolder(var binding: ItemRowProductsBinding) : RecyclerView.ViewHolder(binding.root) {
 
         init {
             binding.lifecycleOwner = lifecycleOwner
@@ -99,8 +98,7 @@ class HomeProductsAdapter(
         }
     }
 
-    inner class LabelHolder(val binding: ItemRowLabelLayoutBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    inner class LabelHolder(val binding: ItemRowLabelLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
             binding.lifecycleOwner = lifecycleOwner
         }
@@ -111,8 +109,7 @@ class HomeProductsAdapter(
         }
     }
 
-    inner class EndViewHolder(val binding: ItemRowEndLayoutBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    inner class EndViewHolder(val binding: ItemRowEndLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
 
         init {
             binding.lifecycleOwner = lifecycleOwner
@@ -128,5 +125,11 @@ class HomeProductsAdapter(
             }
         }
 
+    }
+
+    class DiffUtilCallbackHomeProducts: DiffUtil.ItemCallback<ProductModel>(){
+        override fun areItemsTheSame(oldItem: ProductModel, newItem: ProductModel): Boolean = oldItem.id == newItem.id
+
+        override fun areContentsTheSame(oldItem: ProductModel, newItem: ProductModel): Boolean = oldItem == newItem
     }
 }

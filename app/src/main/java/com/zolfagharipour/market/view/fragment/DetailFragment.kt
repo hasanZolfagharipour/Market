@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.zolfagharipour.market.R
 import com.zolfagharipour.market.adapter.CategoryTagInProductAdapter
-import com.zolfagharipour.market.adapter.HomeProductsAdapter
 import com.zolfagharipour.market.adapter.PhotoSliderAdapter
 import com.zolfagharipour.market.adapter.ProductsInDetailAdapter
 import com.zolfagharipour.market.data.room.entities.ProductModel

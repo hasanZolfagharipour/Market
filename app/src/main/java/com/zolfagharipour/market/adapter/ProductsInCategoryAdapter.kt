@@ -22,7 +22,7 @@ class ProductsInCategoryAdapter(
     val lifecycleOwner: LifecycleOwner,
     val navController: NavController
 ) :
-    ListAdapter<ProductModel, RecyclerView.ViewHolder>(DiffCallback()) {
+    ListAdapter<ProductModel, RecyclerView.ViewHolder>(DiffCallbackProductsInCategory()) {
 
     private val loadingType = 1
     private val errorType = 2
@@ -109,7 +109,7 @@ class ProductsInCategoryAdapter(
             holder.bindingItems(getItem(position))
     }
 
-    class DiffCallback: DiffUtil.ItemCallback<ProductModel>(){
+    class DiffCallbackProductsInCategory: DiffUtil.ItemCallback<ProductModel>(){
         override fun areItemsTheSame(oldItem: ProductModel, newItem: ProductModel): Boolean = oldItem.id == newItem.id
 
         override fun areContentsTheSame(oldItem: ProductModel, newItem: ProductModel): Boolean = oldItem == newItem

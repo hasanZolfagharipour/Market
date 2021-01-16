@@ -102,20 +102,22 @@ class HomeFragment : Fragment() {
         drawable: Int,
         category: CategoryModel
     ) {
+        val adapter = HomeProductsAdapter(
+            viewModel,
+            this@HomeFragment,
+            findNavController(),
+            drawable,
+            category
+        )
+
+        adapter.submitList(list)
         recyclerView.apply {
             layoutManager = LinearLayoutManager(
                 requireActivity(),
                 LinearLayoutManager.HORIZONTAL,
                 false
             )
-            adapter = HomeProductsAdapter(
-                viewModel,
-                this@HomeFragment,
-                list,
-                findNavController(),
-                drawable,
-                category
-            )
+            this.adapter = adapter
         }
     }
 
