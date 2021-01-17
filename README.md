@@ -2,7 +2,7 @@
 
 **`#Kotlin` `#MVVM`**
 
-Market is an online Market app like Digikala using 'woocommerce'. This app let you to shopping what you need.
+Market is an online marketplace app like Digikala. This app let you to shopping what you need.
 Using MVVM architecture this app work smoothly.
 
 ### **Note that this app is not yet complete**
@@ -16,7 +16,7 @@ Using MVVM architecture this app work smoothly.
 - DataBinding
 - NavigationComponent
 - Pagination
-- single Activity
+- Single Activity
 - Coil
 - Gson
 - Lottie animation
